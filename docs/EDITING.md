@@ -18,13 +18,15 @@ Hi Anna! This guide covers everything you need to add posts, drawings, photos an
 6. [Add a drawing](#add-a-drawing)
 7. [Add a photo](#add-a-photo)
 8. [Class resources: pages, games and worksheets](#class-resources-pages-games-and-worksheets)
-9. [Pictures: names, sizes and iPhone photos](#pictures-names-sizes-and-iphone-photos)
-10. [Photos and privacy](#photos-and-privacy)
-11. [Formatting cheat sheet](#formatting-cheat-sheet)
-12. [The fun stuff: components](#the-fun-stuff-components)
-13. [Drafts: save now, publish later](#drafts-save-now-publish-later)
-14. [Changing the About page and the home page](#changing-the-about-page-and-the-home-page)
-15. [If something goes wrong](#if-something-goes-wrong)
+9. [Films for the cinema (coming soon)](#films-for-the-cinema-coming-soon)
+10. [Pictures: names, sizes and iPhone photos](#pictures-names-sizes-and-iphone-photos)
+11. [Photos and privacy](#photos-and-privacy)
+12. [Formatting cheat sheet](#formatting-cheat-sheet)
+13. [Writing in French](#writing-in-french)
+14. [The fun stuff: components](#the-fun-stuff-components)
+15. [Drafts: save now, publish later](#drafts-save-now-publish-later)
+16. [Changing the About page and the home page](#changing-the-about-page-and-the-home-page)
+17. [If something goes wrong](#if-something-goes-wrong)
 
 ---
 
@@ -57,15 +59,16 @@ Tip: bookmark the folders you use most.
 
 ### The name of a file is its web address
 
-A post saved as `src/content/blog/field-trip-day.md` appears at `annasalzman.github.io/blog/field-trip-day/`. So:
+A post saved as `src/content/blog/la-chandeleur.md` appears at `annasalzman.github.io/blog/la-chandeleur/`. So:
 
-- use **lowercase letters, numbers and dashes** only: `field-trip-day.md`, not `Field Trip Day!.md`
+- use **lowercase letters, numbers and dashes** only: `la-chandeleur.md`, not `La Chandeleur!.md`
+- **no accents in file names**: `cafe-de-paris.md`, not `café-de-paris.md` (accents in the text itself are perfectly fine)
 - always end text files in **`.md`**
 - changing a file's name later changes its address (old links to it stop working)
 
 ### The sample content
 
-The site starts with a few sample posts, drawings, photos and resource pages so you can see how everything looks. Their names start with `sample-` (and the welcome post, `welcome.md`). Change them or delete them whenever you like. When you delete a sample, delete its picture in the `images` folder too.
+The site starts with a few sample posts, drawings, photos and resource pages so you can see how everything looks. Their names start with `sample-`, plus the welcome post (`welcome.md`) and two class pages (`francais-1.md` and `jeux.md`). Change them or delete them whenever you like. When you delete a sample, delete its picture in the `images` folder too.
 
 ---
 
@@ -133,17 +136,17 @@ Use the [✏️ new post link](#make-a-new-file), or make a file in `src/content
 
 ```markdown
 ---
-title: Our class garden
-date: 2026-10-11
-description: The tomatoes are finally here!
-cover: ./images/garden-cover.jpg
-coverAlt: Three red tomatoes on a desk
-tags: [classroom, science]
+title: Crêpes for la Chandeleur
+date: 2027-02-02
+description: We made crêpes in class, and nobody dropped one. Presque !
+cover: ./images/crepes-cover.jpg
+coverAlt: A stack of golden crêpes on a plate
+tags: [culture, classroom]
 ---
 
 Write your post here. Leave an empty line between paragraphs.
 
-![Kids watering the plants](./images/garden-watering.jpg)
+![A crêpe in a hot pan](./images/crepe-pan.jpg)
 ```
 
 The part between the two `---` lines is the **top part**: settings for the post. Everything after it is the post itself.
@@ -155,12 +158,12 @@ The part between the two `---` lines is the **top part**: settings for the post.
 | `description` | One sentence shown in the list of posts and in link previews (when someone shares the link). | No, but nice |
 | `cover` | A big picture at the top of the post and on its card. The file goes in `src/content/blog/images`. | No |
 | `coverAlt` | A short description of the cover picture, for people who can't see it. | With a cover |
-| `tags` | Topics, in square brackets with commas: `[science, field trip]`. Each tag gets its own page. | No |
+| `tags` | Topics, in square brackets with commas: `[culture, vocabulaire]`. Each tag gets its own page. | No |
 | `draft` | `draft: true` hides the post. See [Drafts](#drafts-save-now-publish-later). | No |
 
 Two rules for the top part:
 
-- **If a title has a colon (:) or starts with a quote, put the whole title in quotes:** `title: "Day 1: total chaos"`.
+- **If a title has a colon (:) or starts with a quote, put the whole title in quotes:** `title: "Day 1: total chaos"`. That includes French colons: `title: "Les couleurs : le quiz"`.
 - Everything after a `#` is ignored, so put titles with a `#` in quotes too: `title: "Unit #3"`.
 
 Pictures inside the post: upload them to `src/content/blog/images`, then write `![what the picture shows](./images/file-name.jpg)` on its own line, with an empty line before and after. The words in the square brackets describe the picture for people who can't see it.
@@ -213,34 +216,34 @@ The [Resources page](https://annasalzman.github.io/resources/) shows a big color
 
 ### Make a resource page
 
-Use the [🎒 new resource page link](#make-a-new-file), or make a file in `src/content/resources`, like `grade-7-science.md`:
+Use the [🎒 new resource page link](#make-a-new-file), or make a file in `src/content/resources`, like `francais-2.md`:
 
 ```markdown
 ---
-title: 7th grade science
-description: Games, links and worksheets for 7th grade science.
-emoji: 🔬
+title: Français 2
+description: Vocab, verbs and practice for French 2.
+emoji: 🥐
 color: blue
-order: 1
+order: 2
 ---
 
-## This week
+## Cette semaine
 
 <sticky-note>
 
-**Test on Friday!** Practice with the flashcards below.
+**Interro vendredi !** Practice with the flashcards below.
 
 </sticky-note>
 
-## Games
+## Practice
 
-<game-link href="https://phet.colorado.edu/" emoji="🔬">**PhET**: science experiments you can play with</game-link>
-<game-link href="https://www.khanacademy.org/" emoji="🦉">**Khan Academy**: videos and practice</game-link>
+<game-link href="https://conjuguemos.com/" emoji="🔤">**Conjuguemos**: verb practice</game-link>
+<game-link href="https://www.wordreference.com/fren/" emoji="📖">**WordReference**: the dictionary</game-link>
 
 ## Worksheets
 
-- [Cells worksheet](/files/cells-worksheet.pdf)
-- [Lab safety rules](/files/lab-safety.pdf)
+- [Les nombres (worksheet)](/files/les-nombres.pdf)
+- [Le passé composé (worksheet)](/files/passe-compose.pdf)
 ```
 
 | Setting | What it does |
@@ -251,24 +254,49 @@ order: 1
 | `color` | The card's color: `red`, `orange`, `yellow`, `green`, `blue` or `purple`. Optional. |
 | `order` | Cards are sorted by this number, smallest first. Optional. |
 
-The address students type is `annasalzman.github.io/resources/grade-7-science/` (the file name without `.md`).
+The address students type is `annasalzman.github.io/resources/francais-2/` (the file name without `.md`).
 
 ### Add a worksheet (or any file to download)
 
-1. Upload the file to [`public/files`](https://github.com/AnnaSalzman/annasalzman.github.io/tree/main/public/files). Name it with lowercase and dashes: `cells-worksheet.pdf`.
-2. Link to it from any page: `[Cells worksheet](/files/cells-worksheet.pdf)`.
+1. Upload the file to [`public/files`](https://github.com/AnnaSalzman/annasalzman.github.io/tree/main/public/files). Name it with lowercase and dashes, no accents: `passe-compose.pdf`.
+2. Link to it from any page: `[Le passé composé](/files/passe-compose.pdf)`.
 
-The file's own address is `annasalzman.github.io/files/cells-worksheet.pdf`, handy to share directly. PDFs work best because everyone can open them.
+The file's own address is `annasalzman.github.io/files/passe-compose.pdf`, handy to share directly. PDFs work best because everyone can open them.
 
 ### Add a game or website for students
 
-Use a [game link](#game-link-a-big-button-for-games-and-websites) for big, tappable buttons, or a normal link in a list: `- [Prodigy](https://www.prodigygame.com/)`.
+Use a [game link](#game-link-a-big-button-for-games-and-websites) for big, tappable buttons, or a normal link in a list: `- [LyricsTraining](https://lyricstraining.com/)`.
+
+---
+
+## Films for the cinema (coming soon)
+
+The new illustrated home page (your drawings as doors) has a cinema with French film picks. It isn't on the live site yet, but you can already add films. Each film is one file in [`src/content/films`](https://github.com/AnnaSalzman/annasalzman.github.io/tree/main/src/content/films), named after the film without accents (`les-choristes.md`):
+
+```markdown
+---
+title: Les Choristes
+englishTitle: The Chorus
+year: 2004
+director: Christophe Barratier
+country: France
+rating: 5
+---
+
+Your review: what it's about (no spoilers!), why students will like it, what to listen for.
+
+## Mots à connaître
+
+- **la chorale**: the choir
+```
+
+Only `title` is required. `rating` is 1 to 5 stars. For a poster, upload it to `src/content/films/images` and add `poster: ./images/les-choristes.jpg` and `posterAlt: Poster for Les Choristes`.
 
 ---
 
 ## Pictures: names, sizes and iPhone photos
 
-- **Names:** lowercase, numbers and dashes, ending in `.jpg` or `.png`: `garden-day-2.jpg`. Phone names like `IMG_4031.JPG` work, but you'll have to type them exactly (capital letters count), so renaming is easier.
+- **Names:** lowercase, numbers and dashes, no accents, ending in `.jpg` or `.png`: `crepes-day-2.jpg`. Phone names like `IMG_4031.JPG` work, but you'll have to type them exactly (capital letters count), so renaming is easier.
 - **Size:** photos straight from your phone are fine. The website automatically makes smaller copies so pages load fast. Keep files under 10 MB if you can.
 - **Rename before uploading**, on your computer. GitHub can't rename pictures.
 
@@ -313,11 +341,23 @@ Please read this one.
 - Tables:
 
 ```markdown
-| Day | Homework |
+| Jour | Devoirs |
 | --- | --- |
-| Monday | Read chapter 3 |
-| Wednesday | Worksheet page 12 |
+| Lundi | Lire le chapitre 3 |
+| Mercredi | Fiche, page 12 |
 ```
+
+---
+
+## Writing in French
+
+Write French exactly as you normally would: accents, ç, œ and « guillemets » all work everywhere in the text.
+
+- **Spaces before `! ? : ;` are taken care of.** Type `Bonjour !` with a normal space; the website keeps the `!` on the same line as the word, so it never ends up alone on the next line. Same inside « guillemets ».
+- **Typing « and » on a Mac:** **Option + \\** gives «, and **Option + Shift + \\** gives ». Hold down a letter key to pick accents (é, è, ê, …) from the little menu.
+- **No accents in file names** (`cafe.md`, not `café.md`). The text inside can have all the accents you want.
+- **Flashcards know French.** Use `fr="…"` and `en="…"` (see [Flip cards](#flip-cards-flashcards)): the French side is marked as French, so tools that read the page aloud pronounce it properly.
+- **Titles with a French colon** need quotes, like any title with a colon: `title: "Les couleurs : le quiz"`.
 
 ---
 
@@ -331,7 +371,7 @@ Three rules make them work:
 
 1. Put each component **on its own line(s)**, not in the middle of a sentence.
 2. When a component has text inside it, leave an **empty line after the opening tag** and an **empty line before the closing tag**, as in the examples.
-3. Inside `"quotes"`, don't use straight double quotes. Use 'single quotes' or “curly quotes” instead.
+3. Inside `"quotes"`, don't use straight double quotes. Use 'single quotes', “curly quotes” or « guillemets » instead.
 
 If a component's name is misspelled, it won't work: it shows up as plain text, or not at all. The [Actions page](https://github.com/AnnaSalzman/annasalzman.github.io/actions) then shows a note about it on that rebuild.
 
@@ -340,7 +380,7 @@ If a component's name is misspelled, it won't work: it shows up as plain text, o
 ```markdown
 <sticky-note>
 
-**Reminder:** field trip forms are due Friday!
+**Rappel :** permission slips are due Friday!
 
 </sticky-note>
 ```
@@ -350,7 +390,7 @@ Colors: add `color="green"` (or `red`, `orange`, `yellow`, `blue`, `purple`). Ye
 ```markdown
 <sticky-note color="blue">
 
-No homework this week. Enjoy the long weekend!
+Pas de devoirs ce week-end ! No homework this weekend.
 
 </sticky-note>
 ```
@@ -359,9 +399,9 @@ No homework this week. Enjoy the long weekend!
 
 ```markdown
 <details>
-<summary>What is 7 × 8?</summary>
+<summary>Comment dit-on « please » ?</summary>
 
-56!
+S'il vous plaît ! (Or *s'il te plaît* with a friend.)
 
 </details>
 ```
@@ -373,13 +413,13 @@ The question goes between `<summary>` and `</summary>`; the answer goes after it
 ```markdown
 <quiz-question>
 
-Which planet is the biggest in our solar system?
+Comment dit-on « apple » en français ?
 
-- [ ] Mars
-- [x] Jupiter
-- [ ] Earth
+- [ ] une poire
+- [x] une pomme
+- [ ] une banane
 
-Jupiter is so big that more than 1,300 Earths could fit inside it!
+Une pomme ! And a potato is *une pomme de terre*, an "apple of the earth."
 
 </quiz-question>
 ```
@@ -391,18 +431,20 @@ Jupiter is so big that more than 1,300 Earths could fit inside it!
 ### Flip cards: flashcards
 
 ```markdown
-<flip-card front="Photosynthesis" back="How plants make food from sunlight"></flip-card>
-<flip-card front="Mitosis" back="How one cell splits into two"></flip-card>
-<flip-card front="Habitat" back="The place where an animal or plant lives"></flip-card>
+<flip-card fr="le chat" en="the cat"></flip-card>
+<flip-card fr="le chien" en="the dog"></flip-card>
+<flip-card fr="l'oiseau" en="the bird"></flip-card>
 ```
 
-Put several on lines right under each other (no empty lines in between) to get a deck. Each card has its own color; to choose one, add `color="purple"`.
+- The French (`fr`) is on the front, the English (`en`) on the back. The French side is marked as French, so read-aloud tools pronounce it properly.
+- Want English first, or no French at all? Use `front="…"` and `back="…"` instead: `<flip-card front="to eat" back="manger"></flip-card>`.
+- Put several on lines right under each other (no empty lines in between) to get a deck. Each card has its own color; to choose one, add `color="purple"`.
 
 ### Game link: a big button for games and websites
 
 ```markdown
-<game-link href="https://www.desmos.com/calculator" emoji="📈">**Desmos**: the graphing calculator</game-link>
-<game-link href="https://scratch.mit.edu/" emoji="🐱">**Scratch**: make your own games</game-link>
+<game-link href="https://conjuguemos.com/" emoji="🔤">**Conjuguemos**: verb practice</game-link>
+<game-link href="https://lyricstraining.com/" emoji="🎵">**LyricsTraining**: learn with French songs</game-link>
 ```
 
 - `href` is the web address (copy it from your browser's address bar).
@@ -414,14 +456,14 @@ Put several on lines right under each other (no empty lines in between) to get a
 ```markdown
 <photo-grid>
 
-![Planting seeds](./images/garden-1.jpg)
-![The first sprout](./images/garden-2.jpg "Day 6")
-![Tomatoes!](./images/garden-3.jpg "Day 40")
+![Mixing the batter](./images/crepes-1.jpg "La pâte")
+![A crêpe in the pan](./images/crepes-2.jpg "La cuisson")
+![A plate of crêpes](./images/crepes-3.jpg "Miam !")
 
 </photo-grid>
 ```
 
-Text in quotes after the file name (like `"Day 6"`) becomes a caption under that picture. Optional.
+Text in quotes after the file name (like `"La pâte"`) becomes a caption under that picture. Optional.
 
 ### Videos, slides, forms and maps
 
@@ -478,7 +520,7 @@ It means your last change couldn't be put on the website. **Your website is fine
 What to do:
 
 1. Click **View workflow run** in the email. At the top of that page, there's usually a box (marked *Content problem*) that says in plain words what's wrong and which file. For example:
-   - *Can't find the picture "./images/Garden.jpg". There is a file called "garden.jpg" in that folder.* → fix the name in your text file so it matches exactly.
+   - *Can't find the picture "./images/Crepes.jpg". There is a file called "crepes.jpg" in that folder.* → fix the name in your text file so it matches exactly.
    - *The title has a colon in it.* → put the title in quotes.
    - *"…" is an iPhone HEIC photo.* → see [iPhone photos](#iphone-photos-heic).
 2. Fix it and save again. When the new rebuild finishes with a green check, you're done.

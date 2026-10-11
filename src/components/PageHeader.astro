@@ -1,5 +1,7 @@
 ---
 /** The big title at the top of a page, with a highlighter swipe and an optional intro. */
+import { frenchSpacing } from '../lib/typography.ts';
+
 interface Props {
   title: string;
   intro?: string;
@@ -11,8 +13,8 @@ const { title, intro, emoji } = Astro.props;
 
 <header class="page-header">
   {emoji && <span class="page-header__emoji" aria-hidden="true">{emoji}</span>}
-  <h1><span class="marker">{title}</span></h1>
-  {intro && <p class="page-header__intro">{intro}</p>}
+  <h1><span class="marker">{frenchSpacing(title)}</span></h1>
+  {intro && <p class="page-header__intro">{frenchSpacing(intro)}</p>}
   <slot />
 </header>
 

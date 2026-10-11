@@ -8,6 +8,7 @@
  *   - removes the <p> Markdown wraps around a component written on its own line,
  *   - groups neighbouring components that declare a `group` (e.g. a deck of flip cards),
  *   - makes pasted <iframe> embeds (YouTube, Google Slides, …) responsive,
+ *   - keeps French punctuation attached ("Bonjour !" never breaks before the "!"),
  *   - warns (never fails) about tags that look like a misspelled component.
  *
  * To add a component: see CLAUDE.md, "Adding a component for Anna".
@@ -18,6 +19,7 @@ import type { HastPluginDefinition } from 'satteri';
 import type { Element, ElementContent, Root } from 'hast';
 import { attr, h, isElement, meaningful } from './lib/hast.ts';
 import { sizeImage } from './lib/images.ts';
+import { frenchSpacing } from '../lib/typography.ts';
 import type { BuildContext, MarkdownComponent } from './lib/types.ts';
 
 import { flipCard } from './flip-card/build.ts';
@@ -55,18 +57,21 @@ function isBlockComponent(node: ElementContent): boolean {
   return isElement(node) && registry.get(node.tagName)?.block === true;
 }
 
-export function transformChildren(children: ElementContent[], ctx: BuildContext): ElementContent[] {
-  return groupNeighbours(transformFlat(children, ctx));
+/** Elements whose text is shown exactly as typed (no typography changes). */
+const VERBATIM = new Set(['code', 'pre', 'kbd', 'samp', 'script', 'style', 'textarea']);
+
+export function transformChildren(children: ElementContent[], ctx: BuildContext, verbatim = false): ElementContent[] {
+  return groupNeighbours(transformFlat(children, ctx, verbatim));
 }
 
-function transformFlat(children: ElementContent[], ctx: BuildContext): ElementContent[] {
+function transformFlat(children: ElementContent[], ctx: BuildContext, verbatim: boolean): ElementContent[] {
   const out: ElementContent[] = [];
   for (const child of children) {
     if (isElement(child, 'p')) {
       const kids = meaningful(child.children);
       // A component on its own line arrives wrapped in <p>. Drop that wrapper.
       if (kids.length > 0 && kids.every(isBlockComponent)) {
-        out.push(...transformFlat(kids, ctx));
+        out.push(...transformFlat(kids, ctx, verbatim));
         continue;
       }
       const stray = kids.find(isBlockComponent);
@@ -74,13 +79,13 @@ function transformFlat(children: ElementContent[], ctx: BuildContext): ElementCo
         ctx.warn(`<${(stray as Element).tagName}> is in the middle of a sentence. Put it on its own line, with a blank line before and after.`);
       }
     }
-    out.push(...transformNode(child, ctx));
+    out.push(...transformNode(child, ctx, verbatim));
   }
   return out;
 }
 
-function transformNode(node: ElementContent, ctx: BuildContext): ElementContent[] {
-  if (node.type === 'text') return [{ type: 'text', value: node.value }];
+function transformNode(node: ElementContent, ctx: BuildContext, verbatim: boolean): ElementContent[] {
+  if (node.type === 'text') return [{ type: 'text', value: verbatim ? node.value : frenchSpacing(node.value) }];
   if (node.type === 'comment') return [{ type: 'comment', value: node.value }];
   if (node.type !== 'element') return [{ ...node }];
 
@@ -88,7 +93,7 @@ function transformNode(node: ElementContent, ctx: BuildContext): ElementContent[
     type: 'element',
     tagName: node.tagName,
     properties: { ...node.properties },
-    children: transformChildren(node.children, ctx),
+    children: transformChildren(node.children, ctx, verbatim || VERBATIM.has(node.tagName)),
   };
 
   const component = registry.get(el.tagName);

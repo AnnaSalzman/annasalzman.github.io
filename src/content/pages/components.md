@@ -14,7 +14,7 @@ hidden: true
 
 <sticky-note>
 
-**Reminder:** field trip forms are due Friday!
+**Interro vendredi !** Quiz on Friday: review the colors.
 
 </sticky-note>
 
@@ -27,9 +27,9 @@ Sticky notes come in red, orange, yellow, green, blue and purple.
 ## Show the answer
 
 <details>
-<summary>What is 7 × 8?</summary>
+<summary>Comment dit-on « thank you » ?</summary>
 
-56! (5, 6, 7, 8: **56 = 7 × 8**.)
+**Merci !** (And *merci beaucoup* for "thank you very much.")
 
 </details>
 
@@ -37,34 +37,34 @@ Sticky notes come in red, orange, yellow, green, blue and purple.
 
 <quiz-question>
 
-What do plants need to make their own food?
+Quel jour vient après lundi ?
 
-- [ ] Only water
-- [x] Sunlight, water and air
-- [ ] Soil and rocks
+- [ ] dimanche
+- [x] mardi
+- [ ] jeudi
 
-Plants use sunlight, water and carbon dioxide from the air. That's **photosynthesis**.
+Lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche.
 
 </quiz-question>
 
 ## Flip cards
 
-<flip-card front="Noun" back="A person, place or thing"></flip-card>
-<flip-card front="Verb" back="An action word" color="blue"></flip-card>
-<flip-card front="Adjective" back="A word that describes a noun" color="purple"></flip-card>
+<flip-card fr="le chat" en="the cat"></flip-card>
+<flip-card fr="le chien" en="the dog" color="blue"></flip-card>
+<flip-card fr="l'oiseau" en="the bird" color="purple"></flip-card>
 
 ## Game links
 
-<game-link href="https://phet.colorado.edu/" emoji="🔬">**PhET**: science simulations</game-link>
-<game-link href="https://scratch.mit.edu/" emoji="🐱" color="orange">**Scratch**: make your own games</game-link>
+<game-link href="https://conjuguemos.com/" emoji="🔤">**Conjuguemos**: verb practice</game-link>
+<game-link href="https://lyricstraining.com/" emoji="🎵" color="orange">**LyricsTraining**: learn with songs</game-link>
 
 ## Photo grid
 
 <photo-grid>
 
-![A white circle on blue](./images/sample-grid-1.jpg "Circle")
-![A white square on purple](./images/sample-grid-2.jpg "Square")
-![A white triangle on green](./images/sample-grid-3.jpg "Triangle")
+![A white circle on blue](./images/sample-grid-1.jpg "Un cercle")
+![A white square on purple](./images/sample-grid-2.jpg "Un carré")
+![A white triangle on green](./images/sample-grid-3.jpg "Un triangle")
 
 </photo-grid>
 
@@ -76,24 +76,27 @@ Plants use sunlight, water and carbon dioxide from the air. That's **photosynthe
 
 Anything that gives you an "embed code" (YouTube, Google Slides, Google Forms, maps, …) can be pasted in. It shrinks to fit phones and keeps its shape.
 
-<iframe width="800" height="400" src="https://www.openstreetmap.org/export/embed.html?bbox=-170%2C-58%2C170%2C75&amp;layer=mapnik" title="World map"></iframe>
+<iframe width="800" height="400" src="https://www.openstreetmap.org/export/embed.html?bbox=-6%2C41%2C10%2C51.5&amp;layer=mapnik" title="Map of France"></iframe>
 
 ## Plain Markdown
 
 Text can be **bold**, *italic*, or a [link](/blog/). Links to files get an icon: [Sample worksheet](/files/sample-worksheet.pdf).
 
-> A quote looks like this.
+French punctuation stays together: Bonjour ! Ça va ? Il a dit : « Salut ! » Even at the very end of a line, the ! never ends up alone.
 
-1. Numbered
-2. Lists
+> Petit à petit, l'oiseau fait son nid.
+
+1. un
+2. deux
+3. trois
 
 - Bullet
 - Lists
 
-| Day | Homework |
+| Jour | Devoirs |
 | --- | --- |
-| Monday | Read chapter 3 |
-| Wednesday | Worksheet page 12 |
+| Lundi | Lire le chapitre 3 |
+| Mercredi | Fiche, page 12 |
 
 ---
 

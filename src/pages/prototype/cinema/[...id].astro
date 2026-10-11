@@ -1,0 +1,71 @@
+---
+/** PROTOTYPE: one film's review page, inside the cinema. */
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import TownLayout from '../../../layouts/TownLayout.astro';
+import { getFilms } from '../../../lib/content.ts';
+
+export const getStaticPaths = (async () => {
+  const films = await getFilms();
+  return films.map((film) => ({ params: { id: film.id }, props: { film } }));
+}) satisfies GetStaticPaths;
+
+const { film } = Astro.props;
+const { title, englishTitle, year, director, country, rating, poster, posterAlt, draft } = film.data;
+const { Content } = await render(film);
+const details = [englishTitle && `“${englishTitle}”`, year, director, country].filter(Boolean).join(' · ');
+---
+
+<TownLayout place="cinema" title={title} subtitle={details} pageTitle={`${title} (film)`}>
+  <Fragment slot="header">
+    {rating && <p class="stars" aria-label={`Rated ${rating} out of 5`}>{'★'.repeat(Math.round(rating))}{'☆'.repeat(5 - Math.round(rating))}</p>}
+    {draft && <span class="draft-badge">Draft: only you can see this</span>}
+  </Fragment>
+
+  <div class="film">
+    {
+      poster && (
+        <Image class="film__poster" src={poster} alt={posterAlt ?? `Poster for ${title}`} width={480} widths={[240, 360, 480]} sizes="16rem" />
+      )
+    }
+    <div class="prose">
+      <Content />
+    </div>
+  </div>
+
+  <p class="back"><a class="more-link" href="/prototype/cinema/">← <span lang="fr">Au cinéma</span></a></p>
+</TownLayout>
+
+<style>
+  .film {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 48rem) {
+    .film:has(.film__poster) {
+      grid-template-columns: 16rem 1fr;
+    }
+  }
+
+  .film__poster {
+    width: 100%;
+    height: auto;
+    border: var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .stars {
+    margin: 0.5rem 0 0;
+    font-size: 1.4rem;
+    color: var(--tint-strong);
+    letter-spacing: 0.1em;
+  }
+
+  .back {
+    margin-top: 3rem;
+  }
+</style>

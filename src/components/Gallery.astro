@@ -8,6 +8,7 @@ import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { COLORS } from '../lib/colors.ts';
 import FormattedDate from './FormattedDate.astro';
+import { frenchSpacing } from '../lib/typography.ts';
 
 interface Props {
   items: CollectionEntry<'drawings'>[] | CollectionEntry<'photos'>[];
@@ -38,7 +39,7 @@ const { items, base, look, compact = false } = Astro.props;
             }
           />
           <span class="gallery__caption">
-            <span class="gallery__title">{item.data.title}</span>
+            <span class="gallery__title">{frenchSpacing(item.data.title)}</span>
             {!compact && (
               <span class="gallery__date">
                 <FormattedDate date={item.data.date} style="short" />

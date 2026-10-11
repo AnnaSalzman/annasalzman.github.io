@@ -7,6 +7,7 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import TagList from '../../components/TagList.astro';
 import { getPosts, neighbours } from '../../lib/content.ts';
+import { frenchSpacing } from '../../lib/typography.ts';
 
 export const getStaticPaths = (async () => {
   const posts = await getPosts();
@@ -28,7 +29,7 @@ const { Content } = await render(post);
         <FormattedDate date={date} />
         {draft && <span class="draft-badge">Draft: only you can see this</span>}
       </p>
-      <h1>{title}</h1>
+      <h1>{frenchSpacing(title)}</h1>
       <TagList tags={tags} />
     </header>
 

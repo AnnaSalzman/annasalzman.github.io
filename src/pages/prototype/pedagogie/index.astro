@@ -1,0 +1,14 @@
+---
+/** PROTOTYPE: La pédagogie, the blog in the town. */
+import TownLayout from '../../../layouts/TownLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { getPosts } from '../../../lib/content.ts';
+
+const posts = await getPosts();
+---
+
+<TownLayout place="pedagogy" subtitle="Notes on teaching languages, and everything around it.">
+  <div class="post-grid">
+    {posts.map((post) => <PostCard post={post} />)}
+  </div>
+</TownLayout>

@@ -7,6 +7,7 @@ import PostCard from '../components/PostCard.astro';
 import ResourceCard from '../components/ResourceCard.astro';
 import { getDrawings, getPhotos, getPosts, getResources } from '../lib/content.ts';
 import { SITE } from '../site.ts';
+import { frenchSpacing } from '../lib/typography.ts';
 
 const about = await getEntry('pages', 'about');
 const firstName = SITE.name.split(' ')[0];
@@ -20,9 +21,9 @@ const resources = (await getResources()).slice(0, 4);
 <BaseLayout>
   <section class="hero">
     <div class="hero__text">
-      <p class="hero__hello tint-green">Hello there!</p>
+      <p class="hero__hello tint-green">Bonjour&nbsp;!</p>
       <h1>Hi, I’m <span class="marker tint-yellow">{firstName}</span>.</h1>
-      {about?.data.summary && <p class="hero__summary">{about.data.summary}</p>}
+      {about?.data.summary && <p class="hero__summary">{frenchSpacing(about.data.summary)}</p>}
       <div class="hero__actions">
         <a class="button tint-red" href="/blog/">Read the blog</a>
         <a class="button tint-green" href="/resources/">For my students <span aria-hidden="true">🎒</span></a>

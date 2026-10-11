@@ -1,0 +1,32 @@
+---
+/** PROTOTYPE: En classe, the memory classroom. Students' resources. */
+import TownLayout from '../../../layouts/TownLayout.astro';
+import ResourceCard from '../../../components/ResourceCard.astro';
+import { getResources } from '../../../lib/content.ts';
+
+const resources = await getResources();
+---
+
+<TownLayout place="memory" subtitle="The memory classroom: vocab, games and quizzes for my students.">
+  <p class="proust">
+    Like Proust’s madeleine, one little taste and it all comes back. Pick your class:
+  </p>
+  <ul class="resource-grid">
+    {
+      resources.map((resource) => (
+        <li>
+          <ResourceCard resource={resource} />
+        </li>
+      ))
+    }
+  </ul>
+</TownLayout>
+
+<style>
+  .proust {
+    max-width: 36rem;
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+  }
+</style>

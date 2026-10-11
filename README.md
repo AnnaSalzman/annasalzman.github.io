@@ -56,7 +56,7 @@ Anna's account owns the repo, so she gets the failure emails for her own edits. 
 
 ## Before launch
 
-- [ ] Replace or delete the sample content: `src/content/blog/welcome.md`, `src/content/blog/sample-quiz-post.md`, `src/content/drawings/sample-*`, `src/content/photos/sample-*`, `src/content/resources/sample-class.md` and `fun-and-games.md`, the matching pictures in each `images/` folder, and `public/files/sample-worksheet.pdf`. Keep `src/content/pages/images/sample-grid-*.jpg`; the component playground uses them.
+- [ ] Replace or delete the sample content: `src/content/blog/welcome.md`, `src/content/blog/sample-quiz-post.md`, `src/content/drawings/sample-*`, `src/content/photos/sample-*`, `src/content/resources/francais-1.md` and `jeux.md`, the matching pictures in each `images/` folder, and `public/files/sample-worksheet.pdf`. Keep `src/content/pages/images/sample-grid-*.jpg`; the component playground uses them.
 - [ ] Anna rewrites `src/content/pages/about.md` (its `summary` is the home page intro).
 - [ ] Go through the [open questions](docs/DECISIONS.md#open-questions) in DECISIONS.md (license for Anna's content, the contact name in EDITING.md, and a few others).
 

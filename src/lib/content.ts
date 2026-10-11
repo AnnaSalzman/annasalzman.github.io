@@ -30,6 +30,14 @@ export async function getResources(): Promise<CollectionEntry<'resources'>[]> {
   );
 }
 
+/** Newest reviews first; films without a date after those, by title. */
+export async function getFilms(): Promise<CollectionEntry<'films'>[]> {
+  return (await getCollection('films', visible)).sort(
+    (a, b) =>
+      (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0) || a.data.title.localeCompare(b.data.title, 'fr'),
+  );
+}
+
 export async function getPages(): Promise<CollectionEntry<'pages'>[]> {
   return getCollection('pages', visible);
 }

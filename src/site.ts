@@ -7,7 +7,7 @@ import type { Color } from './lib/colors.ts';
 export const SITE = {
   name: 'Anna Salzman',
   description:
-    'A middle school teacher’s corner of the internet: blog posts, drawings, photos, and resources for my students.',
+    'A middle school French teacher’s corner of the internet: blog posts, drawings, photos, and resources for my students.',
   lang: 'en',
 };
 

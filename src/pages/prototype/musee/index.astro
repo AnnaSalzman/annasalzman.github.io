@@ -1,0 +1,215 @@
+---
+/** PROTOTYPE: Au musée. Anna's drawings hung on a gallery wall, and a room still being set up. */
+import { Image } from 'astro:assets';
+import TownLayout from '../../../layouts/TownLayout.astro';
+import { getDrawings } from '../../../lib/content.ts';
+import { frenchSpacing } from '../../../lib/typography.ts';
+
+const drawings = await getDrawings();
+
+/** Placeholders for the francophone room. */
+const coming = ['Paris, France', 'Montréal, Québec', 'Dakar, Sénégal', 'Fort-de-France, Martinique'];
+---
+
+<TownLayout
+  place="museum"
+  subtitle="Drawings by Madame Salzman, and soon, pictures from the French-speaking world."
+>
+  <section class="room" aria-labelledby="salle-1">
+    <h2 id="salle-1" class="room__title"><span class="room__number" lang="fr">Salle 1</span> <span lang="fr">Les dessins</span></h2>
+    <ul class="wall">
+      {
+        drawings.map((drawing, index) => (
+          <li class:list={['artwork', { 'artwork--tilt': index % 3 === 1 }]}>
+            <a href={`/drawings/${drawing.id}/`}>
+              <span class="artwork__frame">
+                <Image
+                  src={drawing.data.image}
+                  alt={drawing.data.alt ?? drawing.data.title}
+                  width={560}
+                  widths={[280, 420, 560]}
+                  sizes="(min-width: 48rem) 15rem, 70vw"
+                />
+              </span>
+              <span class="artwork__placard">
+                <strong>{frenchSpacing(drawing.data.title)}</strong>
+                <span>Anna Salzman, {drawing.data.date.getUTCFullYear()}</span>
+                <span lang="fr">Dessin</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="room" aria-labelledby="salle-2">
+    <h2 id="salle-2" class="room__title">
+      <span class="room__number" lang="fr">Salle 2</span> <span lang="fr">Le monde francophone</span>
+    </h2>
+    <p class="room__note"><span lang="fr">Bientôt&nbsp;!</span> This room is still being set up: pictures from France and the French-speaking world.</p>
+    <ul class="wall wall--empty">
+      {
+        coming.map((place) => (
+          <li class="artwork artwork--empty">
+            <span class="artwork__frame" aria-hidden="true">
+              <span>?</span>
+            </span>
+            <span class="artwork__placard">
+              <strong>{place}</strong>
+              <span lang="fr">Bientôt</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</TownLayout>
+
+<style>
+  .room {
+    margin-top: 3rem;
+  }
+
+  .room__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+  }
+
+  .room__number {
+    font-size: 0.55em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.6rem;
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    background: var(--color-purple-soft);
+  }
+
+  .room__note {
+    max-width: 38rem;
+    color: var(--ink-soft);
+  }
+
+  /* the gallery wall: a pale band with a picture rail and a floor line */
+  .wall {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3rem 2.75rem;
+    margin: 1.5rem 0 0;
+    padding: 2.75rem 1.5rem 2.25rem;
+    list-style: none;
+    background:
+      linear-gradient(var(--line), var(--line)) top 0.9rem left 0 / 100% 2px no-repeat,
+      color-mix(in srgb, var(--color-purple-soft) 55%, transparent);
+    border-bottom: 6px solid var(--line);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .artwork {
+    width: min(100%, 15rem);
+  }
+
+  .artwork a {
+    display: grid;
+    gap: 0.9rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .artwork__frame {
+    position: relative;
+    display: block;
+    padding: 0.75rem;
+    background: var(--surface);
+    border: 7px solid var(--line);
+    box-shadow:
+      inset 0 0 0 2px color-mix(in srgb, var(--line) 25%, transparent),
+      var(--shadow);
+    rotate: -0.8deg;
+    transition:
+      rotate 0.3s var(--ease-bounce),
+      transform 0.3s var(--ease-bounce),
+      box-shadow 0.3s;
+  }
+
+  /* the hook and wire it hangs from */
+  .artwork__frame::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -2.2rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    translate: -50% 0;
+    border-top: 2px solid var(--line);
+    border-left: 2px solid var(--line);
+    rotate: 45deg;
+    transform-origin: center;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .artwork--tilt .artwork__frame {
+    rotate: 1.2deg;
+  }
+
+  .artwork__frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .artwork a:hover .artwork__frame,
+  .artwork a:focus-visible .artwork__frame {
+    rotate: 0deg;
+    transform: translateY(-4px);
+    box-shadow:
+      0 -30px 60px -20px color-mix(in srgb, var(--color-yellow) 60%, transparent),
+      var(--shadow-lg);
+  }
+
+  /* museum label next to each work */
+  .artwork__placard {
+    display: grid;
+    gap: 0.1rem;
+    justify-self: start;
+    max-width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    background: var(--surface);
+    border: 1.5px solid color-mix(in srgb, var(--line) 50%, transparent);
+    box-shadow: 2px 2px 0 color-mix(in srgb, var(--shadow-color) 40%, transparent);
+  }
+
+  .artwork__placard strong {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  .artwork--empty .artwork__frame {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border-style: dashed;
+    border-width: 4px;
+    background: transparent;
+    box-shadow: none;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: color-mix(in srgb, var(--ink) 40%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artwork a:hover .artwork__frame,
+    .artwork a:focus-visible .artwork__frame {
+      transform: none;
+    }
+  }
+</style>

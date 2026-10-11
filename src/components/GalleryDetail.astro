@@ -5,6 +5,7 @@ import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import FormattedDate from './FormattedDate.astro';
 import PrevNext from './PrevNext.astro';
+import { frenchSpacing } from '../lib/typography.ts';
 
 type Item = CollectionEntry<'drawings'> | CollectionEntry<'photos'>;
 
@@ -35,7 +36,7 @@ const { Content } = await render(item);
   </figure>
 
   <div class="detail__words">
-    <h1>{title}</h1>
+    <h1>{frenchSpacing(title)}</h1>
     <p class="detail__date">
       <FormattedDate date={date} />
       {draft && <span class="draft-badge">Draft: only you can see this</span>}

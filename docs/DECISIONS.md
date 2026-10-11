@@ -11,10 +11,11 @@ These need someone other than the developer, or need checking once the repo is l
 | Q1 | **License for Anna's content.** The repo came with an Apache-2.0 `LICENSE`, which as written covers everything in the repo, including her drawings, photos and writing, and lets anyone reuse them. | Left untouched; the footer says "© Anna Salzman". Suggestion: keep a code license (MIT or Apache-2.0) for everything outside `src/content/` and `public/files/`, and state that the content is © Anna Salzman, all rights reserved (or CC BY-NC 4.0 if she wants to share). Anna's call. |
 | Q2 | **Contact name in EDITING.md.** The guide says "message Wouter", taken from this machine's home folder and git config (WHaverals). | Check it's the name Anna uses for you. |
 | Q3 | **Prefilled "new file" links** in EDITING.md use GitHub's `/new/main/<folder>?filename=…&value=…` URL parameters. | Untested while signed in. If `value` isn't honoured, the links still open an empty file in the right folder, and the guide says to paste the template. |
-| Q4 | **About text and home intro** are neutral placeholders. They only say she teaches middle school; subject and grades were unknown. | Anna rewrites `src/content/pages/about.md`. |
-| Q5 | **Sample class pages** link to real, free sites (PhET, Desmos, Khan Academy, TypingClub, Scratch, NASA Space Place) as plausible examples. | Replace with what she actually uses. |
+| Q4 | **About text and home intro** are placeholders. They say she teaches French at a middle school and that students call her Madame Salzman (from her sketch); nothing else. | Anna rewrites `src/content/pages/about.md`. |
+| Q5 | **Sample class pages** (`francais-1.md`, `jeux.md`) link to real French-learning sites, checked live: Conjuguemos, WordReference, TV5MONDE, LyricsTraining, Kahoot, Blooket. | Replace with what she actually uses, including her own Blooket/Kahoot/Quizlet sets. |
 | Q6 | **Pages setting.** Deploy needs Settings → Pages → Source: GitHub Actions, done once by an admin (Anna). | Not done yet; see README. |
 | Q7 | **Failure emails go to whoever pushed.** For Anna's edits that's Anna, not you. | She's told to forward them. If you want to know directly, add a notification step to the workflow later. |
+| Q8 | **The museum's second room** ("images françaises ou francophones"): her own photos from French-speaking places, art she likes, or something else? | Empty "coming soon" frames in the prototype. |
 
 ## Stack and structure
 
@@ -95,4 +96,23 @@ These need someone other than the developer, or need checking once the repo is l
 60. **Her handwriting is the visible label; a typed name is the accessible name** (shown as a chip on hover on desktop, under each drawing on phones).
 61. **Watercolor washes behind the drawings** (crayon tints, a wobbly SVG displacement filter), off-register like a risograph, instead of the earlier clip-art doodles and emoji.
 62. **The menu is hidden on the scene page**; the drawings are the menu (`showNav={false}`).
+
+## French content
+
+63. **All samples and examples are French-class material** (vocab flashcards, "Comment dit-on…?" quizzes, a riddle, Français 1 and games pages, crêpes for la Chandeleur in the guide), so what Anna copies from the guide is directly usable.
+64. **French spacing is automatic.** Spaces before `! ? : ;` and inside « » become no-break spaces at build time (`src/lib/typography.ts`), in Markdown text and in titles rendered by components; code is left alone. It uses U+00A0, not the typographically finer U+202F, because neither font has a U+202F glyph.
+65. **`<flip-card fr="…" en="…">`** puts French on the front and marks it `lang="fr"` for screen readers and read-aloud tools; `front`/`back` remain for anything else. The "tap to flip" hint is hidden from screen readers (CSS `content: "…" / ""`) so it isn't read in a French voice.
+66. **Interface stays English** with French touches (Bonjour !, Merci, à bientôt !, Oups !) because students and parents are English speakers.
+67. **No accents in file names** (they become web addresses); the checker warns and suggests an accent-free name. Accents in text are fine.
+68. **Sample resource pages were renamed** (`sample-class` → `francais-1`, `fun-and-games` → `jeux`), which changes their URLs on the live site. Nothing links to them yet.
+69. **Not done yet** (proposed earlier): a 🔊 listen button using the browser's French voice, fill-in-the-blank for conjugation, styled audio players for her recordings, and a `lang: fr` setting for whole posts written in French.
+
+## The French town (prototype, continued)
+
+70. **Each door now leads to a place inside the prototype** (`/prototype/photos/`, `pedagogie/`, `musee/`, `cinema/`, `classe/`) rather than to the current pages, so the town can be tried end to end without touching the live site. Posts, drawings and photos still open their existing detail pages.
+71. **Place pages share `TownLayout`**: a town menu of tiny drawings (French labels, English accessible names) replaces the emoji menu, and each page opens with its own drawing on a watercolor wash.
+72. **Au musée hangs her drawings on a gallery wall** (frames, wires, museum placards). "Salle 2, le monde francophone" is an empty room with dashed frames until there's content for it (needs Anna: Q8).
+73. **Au cinéma is a real `films` collection**: title, English title, year, director, country, optional rating/poster/date, review as the body. Films show as tickets. The three samples (Les Choristes, Le Petit Nicolas, Ernest et Célestine) have correct facts, placeholder reviews and a short "Mots à connaître" list; I didn't invent opinions or star ratings.
+74. **En classe (the memory classroom) shows the resource pages**, with a nod to Proust's madeleine; **La pédagogie shows the blog posts**; **Les photos shows the photos as polaroids.**
+75. **Drawing data moved to `src/components/scene/town.ts`** and is drawn by `PlaceArt.astro`, so the scene, the menu and the headers reuse the same art.
 

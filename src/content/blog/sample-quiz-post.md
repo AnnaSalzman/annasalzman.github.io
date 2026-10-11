@@ -1,40 +1,41 @@
 ---
-title: "Sample post: try the quiz"
+title: "Sample post: petit quiz"
 date: 2026-10-04
 description: What a post with a quiz, flashcards and a hidden answer looks like.
-tags: [sample, science]
+tags: [sample, vocabulaire]
 ---
 
 <!-- SAMPLE POST: delete this file when you have your own posts. -->
 
-Posts can have small interactive things in them. Here's a quick check before Friday's test.
+Posts can have small interactive things in them. Here's a quick check before Friday's *interro*.
 
 <quiz-question>
 
-Which planet is the biggest in our solar system?
+Comment dit-on « apple » en français ?
 
-- [ ] Mars
-- [x] Jupiter
-- [ ] Earth
-- [ ] Venus
+- [ ] une poire
+- [x] une pomme
+- [ ] une orange
+- [ ] une banane
 
-Jupiter is so big that more than 1,300 Earths could fit inside it!
+Une pomme ! Fun fact: a potato is *une pomme de terre*, an "apple of the earth."
 
 </quiz-question>
 
-## Vocabulary flashcards
+## Les salutations
 
 Tap a card to flip it.
 
-<flip-card front="Orbit" back="The curved path an object takes around a star, planet or moon"></flip-card>
-<flip-card front="Gravity" back="The force that pulls objects toward each other"></flip-card>
-<flip-card front="Galaxy" back="A huge group of stars, gas and dust held together by gravity"></flip-card>
+<flip-card fr="Bonjour" en="Hello / Good morning"></flip-card>
+<flip-card fr="Salut" en="Hi (with friends)"></flip-card>
+<flip-card fr="Au revoir" en="Goodbye"></flip-card>
+<flip-card fr="Ça va ?" en="How's it going?"></flip-card>
 
-## Brain teaser
+## Devinette (a riddle)
 
 <details>
-<summary>What has keys but can't open locks?</summary>
+<summary>Qu'est-ce qui a des dents mais ne mord jamais ?</summary>
 
-A piano! 🎹
+Un peigne ! (A comb!)
 
 </details>

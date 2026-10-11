@@ -1,7 +1,7 @@
 ---
-title: Welcome to my new website!
+title: Bienvenue ! Welcome to my new website
 date: 2026-10-11
-description: A little corner of the internet for my writing, drawings, photos and class resources.
+description: A little corner of the internet for my writing, drawings, photos and resources for my French students.
 cover: ./images/sample-cover.jpg
 coverAlt: A paper airplane doodle on a bright yellow background
 tags: [news]
@@ -9,19 +9,19 @@ tags: [news]
 
 <!-- SAMPLE POST: rewrite it, or delete this file and images/sample-cover.jpg. -->
 
-Hello, and welcome! This is my new home on the internet.
+Bonjour et bienvenue ! Hello, and welcome to my new home on the internet.
 
 Here's what you'll find:
 
-- **Blog**: notes from my classroom and everything around it.
+- **Blog**: notes on teaching French, and everything around it.
 - **Drawings**: pages from my sketchbook.
 - **Photos**: little moments worth keeping.
-- **Resources**: games, links and worksheets for my students.
+- **Resources**: vocab, games and worksheets for my students.
 
 <sticky-note>
 
-**Students:** looking for a game or a worksheet? Head over to [Resources](/resources/).
+**Élèves (students):** looking for a game or your vocab list? Head over to [Resources](/resources/).
 
 </sticky-note>
 
-More soon!
+À bientôt !

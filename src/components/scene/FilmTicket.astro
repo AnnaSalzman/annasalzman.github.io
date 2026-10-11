@@ -1,0 +1,131 @@
+---
+/** PROTOTYPE: a film as a cinema ticket (Au cinéma). Links to the film's review. */
+import type { CollectionEntry } from 'astro:content';
+import { colorFor } from '../../lib/colors.ts';
+import { frenchSpacing } from '../../lib/typography.ts';
+
+interface Props {
+  film: CollectionEntry<'films'>;
+  number: number;
+}
+
+const { film, number } = Astro.props;
+const { title, englishTitle, year, director, country, rating } = film.data;
+const meta = [englishTitle, director, country].filter(Boolean).join(' · ');
+const stars = rating ? '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating)) : undefined;
+---
+
+<a class:list={['ticket', `tint-${colorFor(film.id)}`]} href={`/prototype/cinema/${film.id}/`}>
+  <span class="ticket__body">
+    <span class="ticket__main">
+      <span class="ticket__kicker" lang="fr">Au cinéma{year && ` · ${year}`}</span>
+      <span class="ticket__title" lang="fr">{frenchSpacing(title)}</span>
+      {meta && <span class="ticket__meta">{meta}</span>}
+    </span>
+    <span class="ticket__stub" aria-hidden="true">
+      <span class="ticket__admit" lang="fr">Billet</span>
+      <span class="ticket__number">N° {String(number).padStart(3, '0')}</span>
+      {stars && <span class="ticket__stars">{stars}</span>}
+    </span>
+  </span>
+  {stars && <span class="visually-hidden">Rated {rating} out of 5.</span>}
+</a>
+
+<style>
+  /* The shadow sits on the link, the notched shape on the body inside it
+     (a mask would clip away a shadow on the same element). */
+  .ticket {
+    display: block;
+    color: var(--on-tint);
+    text-decoration: none;
+    filter: drop-shadow(4px 4px 0 var(--shadow-color));
+    rotate: -0.8deg;
+    transition:
+      rotate 0.3s var(--ease-bounce),
+      transform 0.3s var(--ease-bounce);
+  }
+
+  .ticket:nth-child(even) {
+    rotate: 0.9deg;
+  }
+
+  .ticket:hover,
+  .ticket:focus-visible {
+    rotate: 0deg;
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .ticket__body {
+    --notch: 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    background: var(--tint);
+    border-radius: 10px;
+    /* a round notch cut out of each side */
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle var(--notch) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  }
+
+  .ticket__main {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1.1rem 1.25rem 1.1rem 1.75rem;
+  }
+
+  .ticket__kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ticket__title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .ticket__meta {
+    font-size: 0.85rem;
+  }
+
+  .ticket__stub {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.15rem;
+    min-width: 6.5rem;
+    padding: 1rem 1.25rem 1rem 1rem;
+    border-left: 3px dashed color-mix(in srgb, var(--on-tint) 55%, transparent);
+    font-family: var(--font-display);
+    text-align: center;
+  }
+
+  .ticket__admit {
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .ticket__number {
+    font-size: 0.8rem;
+  }
+
+  .ticket__stars {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticket:hover,
+    .ticket:focus-visible {
+      transform: none;
+    }
+  }
+</style>

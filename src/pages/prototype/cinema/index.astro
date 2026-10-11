@@ -1,0 +1,33 @@
+---
+/** PROTOTYPE: Au cinéma. French film picks as tickets; each opens its review. */
+import TownLayout from '../../../layouts/TownLayout.astro';
+import FilmTicket from '../../../components/scene/FilmTicket.astro';
+import { getFilms } from '../../../lib/content.ts';
+
+const films = await getFilms();
+---
+
+<TownLayout place="cinema" subtitle="French film picks and reviews. Grab a ticket!">
+  {
+    films.length > 0 ? (
+      <div class="tickets">
+        {films.map((film, i) => (
+          <FilmTicket film={film} number={i + 1} />
+        ))}
+      </div>
+    ) : (
+      <p>
+        <span lang="fr">La salle est vide.</span> No films yet. Check back soon!
+      </p>
+    )
+  }
+</TownLayout>
+
+<style>
+  .tickets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr));
+    gap: 2rem 2.5rem;
+    max-width: 56rem;
+  }
+</style>

@@ -1,99 +1,25 @@
 ---
 /**
  * PROTOTYPE: the home page as Anna's illustrated town (from her sketch, docs/
- * DECISIONS.md). Each drawing is a door to a section, with a small ritual:
+ * DECISIONS.md). Each drawing is a door to a place, with a small ritual:
  * the camera flashes, the marker writes A B C, a visitor climbs the museum
  * stairs, a ticket slides out of the box office, the madeleine gets eaten.
  *
- * Drawings are SVGs extracted from her sketch (src/assets/scene/), placed at
- * their sketch coordinates on desktop and stacked as a walk on phones.
+ * Drawings and places are defined in ./town.ts. They sit at their sketch
+ * coordinates on desktop and stack as a walk on phones.
  * Ink is `currentColor`, so it turns to chalk in the chalkboard theme.
  */
 import { getImage } from 'astro:assets';
-import type { Color } from '../../lib/colors.ts';
 import { getPhotos } from '../../lib/content.ts';
-
-import BoardLabel from '../../assets/scene/board-label.svg';
-import BoardLetters from '../../assets/scene/board-letters.svg';
-import Board from '../../assets/scene/board.svg';
-import CinemaBooth from '../../assets/scene/cinema-booth.svg';
-import CinemaLabel from '../../assets/scene/cinema-label.svg';
-import CinemaScreen from '../../assets/scene/cinema-screen.svg';
-import CinemaSeats from '../../assets/scene/cinema-seats.svg';
-import MadeleineLabel from '../../assets/scene/madeleine-label.svg';
-import Madeleine from '../../assets/scene/madeleine.svg';
-import MuseumFigure from '../../assets/scene/museum-figure.svg';
-import MuseumLabel from '../../assets/scene/museum-label.svg';
-import Museum from '../../assets/scene/museum.svg';
-import PortraitLabel from '../../assets/scene/portrait-label.svg';
-import Portrait from '../../assets/scene/portrait.svg';
-import Profile from '../../assets/scene/profile.svg';
-
-type Box = [x: number, y: number, w: number, h: number];
-
-/** Where each drawing sits on Anna's sketch page (sketch units, page is 685 × 514). */
-const PARTS = {
-  portrait: { svg: Portrait, box: [63.85, 37.51, 115.32, 123.33] },
-  'portrait-label': { svg: PortraitLabel, box: [163.64, 43.3, 112.43, 92.68] },
-  board: { svg: Board, box: [30.74, 197.37, 113.82, 62.95] },
-  'board-letters': { svg: BoardLetters, box: [48.5, 205.3, 57.75, 38.29] },
-  'board-label': { svg: BoardLabel, box: [12.66, 258.31, 149.46, 113.93] },
-  museum: { svg: Museum, box: [324.77, 86.36, 314.19, 210.44] },
-  'museum-figure': { svg: MuseumFigure, box: [430.71, 291.57, 29.64, 61.04] },
-  'museum-label': { svg: MuseumLabel, box: [387.18, 352.79, 154.05, 93.71] },
-  'cinema-screen': { svg: CinemaScreen, box: [206.42, 310.84, 144.82, 88.8] },
-  'cinema-seats': { svg: CinemaSeats, box: [224.54, 406.08, 121.19, 22.66] },
-  'cinema-booth': { svg: CinemaBooth, box: [245.16, 434.3, 82.45, 80.08] },
-  'cinema-label': { svg: CinemaLabel, box: [326.99, 456.19, 125.75, 46.45] },
-  profile: { svg: Profile, box: [21.86, 395.93, 65.49, 112.75] },
-  madeleine: { svg: Madeleine, box: [95.13, 459.56, 22.98, 34.0] },
-  'madeleine-label': { svg: MadeleineLabel, box: [86.64, 405.84, 111.32, 58.74] },
-} satisfies Record<string, { svg: unknown; box: Box }>;
-
-type PartName = keyof typeof PARTS;
-
-interface Place {
-  id: string;
-  href: string;
-  name: string;
-  hint: string;
-  color: Color;
-  art: PartName[];
-  label: PartName;
-  /** Width of the drawing when stacked on a phone, as a share of the column. */
-  mobileWidth: number;
-}
-
-const places: Place[] = [
-  { id: 'photos', href: '/photos/', name: 'Photos', hint: 'Madame Salzman’s photos', color: 'blue', art: ['portrait'], label: 'portrait-label', mobileWidth: 0.62 },
-  { id: 'pedagogy', href: '/blog/', name: 'Pedagogy', hint: 'Notes on teaching languages', color: 'red', art: ['board', 'board-letters'], label: 'board-label', mobileWidth: 0.8 },
-  { id: 'museum', href: '/drawings/', name: 'The museum', hint: 'Drawings and francophone images', color: 'purple', art: ['museum', 'museum-figure'], label: 'museum-label', mobileWidth: 1 },
-  { id: 'cinema', href: '/prototype/films/', name: 'The cinema', hint: 'French film picks and reviews', color: 'orange', art: ['cinema-screen', 'cinema-seats', 'cinema-booth'], label: 'cinema-label', mobileWidth: 0.72 },
-  { id: 'memory', href: '/resources/', name: 'The memory classroom', hint: 'Games, vocab and quizzes', color: 'green', art: ['profile', 'madeleine'], label: 'madeleine-label', mobileWidth: 0.42 },
-];
+import PlaceArt from './PlaceArt.astro';
+import { PARTS, PLACES, pct, union, type Box } from './town.ts';
 
 /** The part of the sketch page the scene shows. */
 const VIEW: Box = [5, 28, 645, 492];
 
-const pct = (n: number) => `${+(n * 100).toFixed(3)}%`;
-
-function union(names: PartName[]): Box {
-  const boxes = names.map((n) => PARTS[n].box);
-  const x0 = Math.min(...boxes.map((b) => b[0]));
-  const y0 = Math.min(...boxes.map((b) => b[1]));
-  const x1 = Math.max(...boxes.map((b) => b[0] + b[2]));
-  const y1 = Math.max(...boxes.map((b) => b[1] + b[3]));
-  return [x0, y0, x1 - x0, y1 - y0];
-}
-
 /** Position in the scene (desktop). */
 function inScene([x, y, w, h]: Box) {
   return `--left:${pct((x - VIEW[0]) / VIEW[2])};--top:${pct((y - VIEW[1]) / VIEW[3])};--width:${pct(w / VIEW[2])};--ratio:${w}/${h};`;
-}
-
-/** Position inside its place's drawing box (both layouts). */
-function inArt([x, y, w]: Box, [ax, ay, aw, ah]: Box) {
-  return `--px:${pct((x - ax) / aw)};--py:${pct((y - ay) / ah)};--pw:${pct(w / aw)};`;
 }
 
 // The two newest photos pop out of the camera.
@@ -114,21 +40,16 @@ const snapshots = await Promise.all(
     </filter>
   </svg>
   {
-    places.map((place) => {
+    PLACES.map((place) => {
       const artBox = union(place.art);
       const Label = PARTS[place.label].svg;
       return (
         <a class:list={['place', `place--${place.id}`, `tint-${place.color}`]} href={place.href}>
-          <span class="place__art" style={`${inScene(artBox)}--mobile-width:${pct(place.mobileWidth)};`}>
-            {place.art.map((name) => {
-              const Part = PARTS[name].svg;
-              return (
-                <span class:list={['part', `part--${name}`]} style={inArt(PARTS[name].box, artBox)}>
-                  <Part aria-hidden="true" />
-                </span>
-              );
-            })}
-
+          <PlaceArt
+            parts={place.art}
+            class="place__art"
+            style={`${inScene(artBox)}--mobile-width:${pct(place.mobileWidth)};`}
+          >
             {place.id === 'photos' && (
               <>
                 <span class="flash" aria-hidden="true" />
@@ -159,7 +80,7 @@ const snapshots = await Promise.all(
             )}
 
             <span class="place__chip" aria-hidden="true">{place.name} →</span>
-          </span>
+          </PlaceArt>
 
           <span class="place__label" style={inScene(PARTS[place.label].box)}>
             <Label class="place__handwriting" aria-hidden="true" />
@@ -223,7 +144,7 @@ const snapshots = await Promise.all(
     outline: none;
   }
 
-  .place__art,
+  .scene :global(.place__art),
   .place__label {
     position: absolute;
     left: var(--left);
@@ -231,20 +152,11 @@ const snapshots = await Promise.all(
     width: var(--width);
   }
 
-  .place__art {
-    aspect-ratio: var(--ratio);
+  .scene :global(.place__art) {
     isolation: isolate;
     cursor: pointer;
   }
 
-  .part {
-    position: absolute;
-    left: var(--px);
-    top: var(--py);
-    width: var(--pw);
-  }
-
-  .part :global(svg),
   .place__label :global(svg) {
     display: block;
     width: 100%;
@@ -257,7 +169,7 @@ const snapshots = await Promise.all(
   }
 
   /* A wash of color behind part of each drawing, off-register like a risograph print. */
-  .place__art::before {
+  .scene :global(.place__art)::before {
     content: '';
     position: absolute;
     z-index: -1;
@@ -271,23 +183,23 @@ const snapshots = await Promise.all(
       scale 0.4s var(--ease-bounce);
   }
 
-  .place--photos .place__art {
+  .place--photos :global(.place__art) {
     --wash: 34% 38% -2% 4%;
   }
-  .place--pedagogy .place__art {
+  .place--pedagogy :global(.place__art) {
     --wash: 6% -3% -8% 12%;
   }
-  .place--museum .place__art {
+  .place--museum :global(.place__art) {
     --wash: 4% 6% 50% 30%;
   }
-  .place--cinema .place__art {
+  .place--cinema :global(.place__art) {
     --wash: -3% -4% 55% 10%;
   }
-  .place--memory .place__art {
+  .place--memory :global(.place__art) {
     --wash: 52% -8% 0% 46%;
   }
 
-  .place:is(:hover, :focus-visible, .is-active) .place__art::before {
+  .place:is(:hover, :focus-visible, .is-active) :global(.place__art)::before {
     background: color-mix(in srgb, var(--tint) 35%, var(--tint-soft));
     scale: 1.04;
   }
@@ -335,7 +247,7 @@ const snapshots = await Promise.all(
     scale: 1;
   }
 
-  .place:focus-visible .place__art,
+  .place:focus-visible :global(.place__art),
   .place:focus-visible .place__label {
     outline: 3px solid var(--color-blue-strong);
     outline-offset: 6px;
@@ -423,11 +335,11 @@ const snapshots = await Promise.all(
 
   /* ---------- Pedagogy: the marker writes A B C on the board ---------- */
 
-  .scene.is-ready .part--board-letters {
+  .scene.is-ready :global(.part--board-letters) {
     clip-path: inset(0 100% 0 0);
   }
 
-  .scene.is-ready .place--pedagogy:is(:hover, :focus-visible, .is-active) .part--board-letters {
+  .scene.is-ready .place--pedagogy:is(:hover, :focus-visible, .is-active) :global(.part--board-letters) {
     animation: write 1.3s steps(14, end) forwards;
   }
 
@@ -439,7 +351,7 @@ const snapshots = await Promise.all(
 
   /* ---------- Museum: a visitor climbs the stairs ---------- */
 
-  .place--museum:is(:hover, :focus-visible, .is-active) .part--museum-figure {
+  .place--museum:is(:hover, :focus-visible, .is-active) :global(.part--museum-figure) {
     animation: climb 1.8s ease-in-out forwards;
   }
 
@@ -554,11 +466,11 @@ const snapshots = await Promise.all(
 
   /* ---------- Memory classroom: eat the madeleine ---------- */
 
-  .part--madeleine {
+  .scene :global(.part--madeleine) {
     transform-origin: 50% 80%;
   }
 
-  .place--memory:is(:hover, :focus-visible) .part--madeleine {
+  .place--memory:is(:hover, :focus-visible) :global(.part--madeleine) {
     animation: wobble 0.7s ease-in-out;
   }
 
@@ -571,7 +483,7 @@ const snapshots = await Promise.all(
     }
   }
 
-  .place--memory.is-eating .part--madeleine {
+  .place--memory.is-eating :global(.part--madeleine) {
     animation: bites 0.9s steps(1, end) forwards;
   }
 
@@ -676,14 +588,14 @@ const snapshots = await Promise.all(
       border-left: 3px dotted color-mix(in srgb, var(--ink) 45%, transparent);
     }
 
-    .place__art,
+    .scene :global(.place__art),
     .place__label {
       position: relative;
       left: auto;
       top: auto;
     }
 
-    .place__art {
+    .scene :global(.place__art) {
       width: var(--mobile-width);
       max-width: 24rem;
     }
@@ -726,11 +638,11 @@ const snapshots = await Promise.all(
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .scene.is-ready .part--board-letters {
+    .scene.is-ready :global(.part--board-letters) {
       clip-path: none;
     }
 
-    .place .part,
+    .place :global(.part),
     .place .flash,
     .place .screen-glow {
       animation: none !important;

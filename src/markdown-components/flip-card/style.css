@@ -64,7 +64,8 @@ flip-card {
 
 .flip-card__front::after,
 .flip-card__back::after {
-  content: '↻ tap to flip';
+  /* decorative: the empty alt text after / keeps it out of screen readers */
+  content: '↻ tap to flip' / '';
   position: absolute;
   bottom: 0.45rem;
   left: 0;
@@ -76,7 +77,7 @@ flip-card {
 }
 
 .flip-card__back::after {
-  content: '↻ flip back';
+  content: '↻ flip back' / '';
 }
 
 /* Before the script runs (or without it): show both sides, no flipping. */

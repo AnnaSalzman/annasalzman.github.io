@@ -47,6 +47,18 @@ function walk(dir) {
 
 const sizeMB = (file) => statSync(file).size / 1024 / 1024;
 
+/** "Été à Paris.JPG" → "ete-a-paris.jpg" */
+function suggestName(name) {
+  const ext = extname(name).toLowerCase();
+  const stem = basename(name, extname(name))
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${stem || 'name'}${ext}`;
+}
+
 /**
  * existsSync, but case-sensitive everywhere. macOS finds "Photo.JPG" when asked
  * for "photo.jpg"; the Linux machine that builds the site does not.
@@ -124,7 +136,11 @@ for (const file of walk(CONTENT)) {
     continue;
   }
 
-  const source = readFileSync(file, 'utf8').replace(/^﻿/, '');
+  if (!/^[a-z0-9][a-z0-9-]*\.md$/.test(name)) {
+    report('warning', file, `A page's file name becomes its web address, so keep it to lowercase letters, numbers and dashes, without accents: "${suggestName(name)}". (Accents are fine inside the text.)`);
+  }
+
+  const source = readFileSync(file, 'utf8').replace(/^\uFEFF/, '');
   if (!/^---\r?\n/.test(source)) {
     report('error', file, `This file has to start with a line of three dashes (---), then the title, date and so on, then another line of three dashes. Copy the top part from an example in docs/EDITING.md.`);
     continue;
@@ -207,7 +223,7 @@ for (const file of walk(CONTENT)) {
     report('warning', file, `This is an iPhone HEIC photo, which websites can't show. Upload a JPG version instead (see docs/EDITING.md).`);
   }
   if (!GOOD_NAME.test(name)) {
-    report('warning', file, `Picture names work best in lowercase with dashes, like "${name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-+/, '')}".`);
+    report('warning', file, `Picture names work best in lowercase with dashes and no accents, like "${suggestName(name)}".`);
   }
   if (sizeMB(file) > BIG_FILE_MB) {
     report('warning', file, `This picture is ${sizeMB(file).toFixed(0)} MB. That's fine for the site (it gets shrunk), but it makes the project heavy. Under ${BIG_FILE_MB} MB is best.`);

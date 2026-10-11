@@ -1,0 +1,12 @@
+---
+/** PROTOTYPE: Les photos, in the town. */
+import TownLayout from '../../../layouts/TownLayout.astro';
+import Gallery from '../../../components/Gallery.astro';
+import { getPhotos } from '../../../lib/content.ts';
+
+const photos = await getPhotos();
+---
+
+<TownLayout place="photos" subtitle="Little moments worth keeping, by Madame Salzman.">
+  <Gallery items={photos} base="/photos/" look="polaroid" />
+</TownLayout>

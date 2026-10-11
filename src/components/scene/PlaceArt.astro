@@ -1,0 +1,60 @@
+---
+/**
+ * Draws a group of Anna's sketch drawings, keeping their positions relative to
+ * each other (e.g. the cinema screen above its seats). Fills its container's
+ * width; pass `height` instead to size it by height (menu icons).
+ * Ink follows `currentColor`.
+ */
+import { PARTS, inArt, union, type PartName } from './town.ts';
+
+interface Props {
+  parts: PartName[];
+  class?: string;
+  style?: string;
+  /** Size by height instead of width, e.g. "2.75rem". A parent can override it with --art-h. */
+  height?: string;
+}
+
+const { parts, class: className, style = '', height } = Astro.props;
+const box = union(parts);
+const ratio = box[2] / box[3];
+const size = height
+  ? `height:var(--art-h, ${height});width:calc(var(--art-h, ${height}) * ${ratio.toFixed(4)});`
+  : '';
+---
+
+<span class:list={['place-art', className]} style={`--ratio:${box[2]}/${box[3]};${size}${style}`}>
+  {
+    parts.map((name) => {
+      const Part = PARTS[name].svg;
+      return (
+        <span class:list={['part', `part--${name}`]} style={inArt(PARTS[name].box, box)}>
+          <Part aria-hidden="true" />
+        </span>
+      );
+    })
+  }
+  <slot />
+</span>
+
+<style is:global>
+  .place-art {
+    position: relative;
+    display: block;
+    aspect-ratio: var(--ratio);
+  }
+
+  .place-art .part {
+    position: absolute;
+    left: var(--px);
+    top: var(--py);
+    width: var(--pw);
+  }
+
+  .place-art .part svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+</style>

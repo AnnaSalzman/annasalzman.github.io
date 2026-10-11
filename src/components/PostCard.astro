@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import { colorFor } from '../lib/colors.ts';
 import FormattedDate from './FormattedDate.astro';
 import TagList from './TagList.astro';
+import { frenchSpacing } from '../lib/typography.ts';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -33,8 +34,8 @@ const href = `/blog/${post.id}/`;
       <FormattedDate date={date} />
       {draft && <span class="draft-badge">Draft</span>}
     </p>
-    <Heading class="post-card__title"><a href={href}>{title}</a></Heading>
-    {description && <p class="post-card__description">{description}</p>}
+    <Heading class="post-card__title"><a href={href}>{frenchSpacing(title)}</a></Heading>
+    {description && <p class="post-card__description">{frenchSpacing(description)}</p>}
     <TagList tags={tags} class="post-card__tags" />
   </div>
 </article>

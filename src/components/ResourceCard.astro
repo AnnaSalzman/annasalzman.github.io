@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { colorFor } from '../lib/colors.ts';
+import { frenchSpacing } from '../lib/typography.ts';
 
 interface Props {
   resource: CollectionEntry<'resources'>;
@@ -14,10 +15,10 @@ const { title, description, emoji, color, draft } = resource.data;
   <span class="resource-card__emoji" aria-hidden="true">{emoji ?? '📚'}</span>
   <span class="resource-card__text">
     <span class="resource-card__title">
-      {title}
+      {frenchSpacing(title)}
       {draft && <span class="draft-badge">Draft</span>}
     </span>
-    {description && <span class="resource-card__description">{description}</span>}
+    {description && <span class="resource-card__description">{frenchSpacing(description)}</span>}
   </span>
 </a>
 

@@ -86,6 +86,26 @@ const resources = defineCollection({
   }),
 });
 
+/** French film picks (the cinema in the illustrated town). The text below the top part is the review. */
+const films = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/films' }),
+  schema: ({ image }) =>
+    z.object({
+      title: text,
+      englishTitle: optionalText,
+      year: z.coerce.number().int().optional(),
+      director: optionalText,
+      country: optionalText,
+      /** 1 to 5 stars. */
+      rating: z.coerce.number().min(0).max(5).optional(),
+      poster: image().optional(),
+      posterAlt: optionalText,
+      /** When the review was written; newest reviews come first. */
+      date: z.coerce.date().optional(),
+      draft: flag,
+    }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
@@ -99,4 +119,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { blog, drawings, photos, resources, pages };
+export const collections = { blog, drawings, photos, resources, films, pages };
