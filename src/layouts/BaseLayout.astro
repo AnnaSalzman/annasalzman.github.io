@@ -29,9 +29,19 @@ interface Props {
   /** Keep this page out of search engines. */
   noindex?: boolean;
   type?: 'website' | 'article';
+  /** Show the menu in the header (default true). */
+  showNav?: boolean;
 }
 
-const { title, description = SITE.description, image, section, noindex = false, type = 'website' } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  image,
+  section,
+  noindex = false,
+  type = 'website',
+  showNav = true,
+} = Astro.props;
 
 const pageTitle = title ? `${title} · ${SITE.name}` : SITE.name;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -74,7 +84,7 @@ const socialImage = image
   </head>
   <body class={`tint-${sectionColor(section)}`}>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header section={section} />
+    <Header section={section} showNav={showNav} />
     <main id="main" class="container">
       <slot />
     </main>

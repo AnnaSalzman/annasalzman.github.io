@@ -4,9 +4,11 @@ import Doodle from './Doodle.astro';
 
 interface Props {
   section?: Section;
+  /** Hide the menu (the illustrated home scene is its own menu). */
+  showNav?: boolean;
 }
 
-const { section } = Astro.props;
+const { section, showNav = true } = Astro.props;
 const path = Astro.url.pathname;
 ---
 
@@ -17,6 +19,7 @@ const path = Astro.url.pathname;
       <span class="logo__name">{SITE.name}</span>
     </a>
 
+    {showNav && (
     <nav class="nav" aria-label="Main">
       <ul>
         {
@@ -35,6 +38,7 @@ const path = Astro.url.pathname;
         }
       </ul>
     </nav>
+    )}
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" title="Paper or chalkboard?">
       <span class="visually-hidden">Chalkboard mode</span>

@@ -156,6 +156,15 @@ The existence check is case-sensitive on purpose: macOS finds `Photo.JPG` when a
 - **Failure path:** if the build fails, nothing is deployed and the previous site stays live. GitHub emails whoever pushed the commit ("Run failed: Publish site - main"), which for content edits is Anna. You won't get that email for her commits; watch the Actions tab, or ask her to forward it (EDITING.md tells her to).
 - Anna is told to expect about two minutes from save to live. The local build of the sample site takes a few seconds; build time grows with the number of pictures (each produces several WebP sizes). See Limits below.
 
+## Illustrated home page (prototype)
+
+`/prototype/` (`src/pages/prototype/index.astro`) renders `src/components/scene/Scene.astro`: Anna's sketch as a clickable town. It's not linked anywhere yet; adopting it means moving it to `src/pages/index.astro`.
+
+- **Art:** `src/assets/scene/*.svg`, one file per drawing, extracted from her vector PDF with `scripts/scene/split-sketch.py` and `optimize-svg.py` (Python + poppler's `pdftocairo`, run by hand; not part of the build). Imported as Astro SVG components, so they're inlined and `fill="currentColor"` follows the theme.
+- **Layout:** `PARTS` holds each drawing's box in sketch coordinates. A place (link) has an art box (the union of its drawings) and a label box. On desktop both are positioned in the scene by percentage of `VIEW`; on phones the places stack, each art box keeping its internal composition.
+- **Behaviour:** CSS for the hover/focus/`.is-active` animations; a small script adds `.is-ready` (enables the "blank whiteboard" state), plays animations on scroll for touch screens, and runs the madeleine's eat-then-navigate.
+- **Swapping in final art:** replace the SVGs and update the boxes in `PARTS` (from `meta.json`). Moving parts (letters, figure, madeleine) must stay separate files.
+
 ## Where to extend
 
 | You want to… | Do this |

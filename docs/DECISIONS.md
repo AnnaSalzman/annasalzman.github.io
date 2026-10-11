@@ -83,3 +83,16 @@ These need someone other than the developer, or need checking once the repo is l
 51. **`.claude/launch.json` committed** so Claude Code's browser pane can start the dev and preview servers.
 52. **No CMS** (Decap, Pages CMS, …): the brief was github.com's own editor. If the editor turns out to be a struggle for Anna, Pages CMS on top of these same files would be the next step; the schema already maps to forms.
 53. **Placeholder sample content** (`sample-*`, `welcome.md`) uses generated, clearly labelled "SAMPLE" images, so the site can be reviewed before Anna adds her own. Listed in README under "Before launch".
+
+## Illustrated home page (prototype, from Anna's sketch)
+
+54. **Anna teaches French at an English-speaking school**: the interface stays in English, with French as flavor (her labels, "Bonjour !").
+55. **Her sketch becomes the navigation.** Each drawing is a door: portrait with camera → Photos, whiteboard → Pedagogy (the blog), museum → drawings (and later francophone images), cinema → films (not built yet), madeleine → the memory classroom (student resources). The mapping is a guess until Anna confirms.
+56. **Built as a separate page, `/prototype/`** (noindex, not linked), so the live home page is untouched until it's adopted.
+57. **Drawings are lifted straight from her vector PDF** (`scripts/scene/`) rather than scanned: strokes split by region, simplified (~6× smaller), inlined as SVG with `currentColor`, so the ink follows the theme (chalk in dark mode). About 34 KB gzipped for the whole scene.
+58. **Desktop keeps her composition** (each drawing at its sketch coordinates); **phones get a vertical walk** with a dotted path between places.
+59. **Each door has a small ritual** (flash plus her latest photos popping out of the camera, the marker writing A B C, a visitor climbing the stairs, a ticket from the box office, eating the madeleine). On touch screens they play when scrolled into view; with reduced motion they're off. Only the madeleine delays navigation (~1 s), and not for modified clicks.
+60. **Her handwriting is the visible label; a typed name is the accessible name** (shown as a chip on hover on desktop, under each drawing on phones).
+61. **Watercolor washes behind the drawings** (crayon tints, a wobbly SVG displacement filter), off-register like a risograph, instead of the earlier clip-art doodles and emoji.
+62. **The menu is hidden on the scene page**; the drawings are the menu (`showNav={false}`).
+
