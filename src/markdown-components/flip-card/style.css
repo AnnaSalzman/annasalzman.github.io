@@ -1,0 +1,95 @@
+.flip-card-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  gap: 1.25rem;
+}
+
+flip-card {
+  display: block;
+  perspective: 900px;
+}
+
+.flip-card {
+  display: grid;
+  width: 100%;
+  min-height: 9.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-bounce);
+}
+
+.flip-card:focus-visible {
+  outline: none;
+}
+
+.flip-card:focus-visible .flip-card__face {
+  outline: 3px solid var(--color-blue-strong);
+  outline-offset: 3px;
+}
+
+.flip-card[aria-pressed='true'] {
+  transform: rotateY(180deg);
+}
+
+.flip-card__face {
+  position: relative;
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1.25rem 1.75rem;
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card__front {
+  background: var(--tint);
+  color: var(--on-tint);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.flip-card__back {
+  background: var(--surface);
+  transform: rotateY(180deg);
+}
+
+.flip-card__front::after,
+.flip-card__back::after {
+  content: '↻ tap to flip';
+  position: absolute;
+  bottom: 0.45rem;
+  left: 0;
+  right: 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.flip-card__back::after {
+  content: '↻ flip back';
+}
+
+/* Before the script runs (or without it): show both sides, no flipping. */
+flip-card:not(:defined) .flip-card {
+  cursor: default;
+}
+
+flip-card:not(:defined) .flip-card__face {
+  grid-area: auto;
+  transform: none;
+  backface-visibility: visible;
+}
+
+flip-card:not(:defined) .flip-card__face::after {
+  content: none;
+}

@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostCard from '../../components/PostCard.astro';
+import { colorFor } from '../../lib/colors.ts';
+import { getPosts, getTags } from '../../lib/content.ts';
+
+const posts = await getPosts();
+const tags = await getTags();
+---
+
+<BaseLayout title="Blog" description="Notes from my classroom and everything around it." section="blog">
+  <PageHeader title="Blog" emoji="✏️" intro="Notes from my classroom and everything around it.">
+    {
+      tags.length > 0 && (
+        <ul class="tag-list blog-tags" aria-label="Browse by tag">
+          {tags.map((tag) => (
+            <li>
+              <a class:list={['tag', `tint-${colorFor(tag.slug)}`]} href={`/blog/tags/${tag.slug}/`}>
+                #{tag.name} <span class="visually-hidden">({tag.count} posts)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </PageHeader>
+
+  {
+    posts.length > 0 ? (
+      <div class="post-grid">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <p>No posts yet. Check back soon!</p>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .blog-tags {
+    margin-top: 1.25rem;
+  }
+</style>

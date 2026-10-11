@@ -1,0 +1,82 @@
+---
+import { NAV, SITE } from '../site.ts';
+import Doodle from './Doodle.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="site-footer__squiggle" aria-hidden="true"><Doodle name="squiggle" /></span>
+    <div class="site-footer__row">
+      <p class="site-footer__hello">Thanks for stopping by! <span aria-hidden="true">✏️</span></p>
+      <nav aria-label="Footer">
+        <ul>
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/rss.xml">RSS feed</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="site-footer__small">© {year} {SITE.name}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 5rem;
+    padding-block: 1rem 2.5rem;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  .site-footer__squiggle {
+    display: block;
+    width: 10rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-purple);
+  }
+
+  .site-footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem 2rem;
+  }
+
+  .site-footer__hello {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    color: var(--ink);
+  }
+
+  .site-footer__small {
+    margin: 1rem 0 0;
+    font-size: 0.85rem;
+  }
+</style>

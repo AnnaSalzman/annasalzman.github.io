@@ -1,0 +1,128 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { colorFor } from '../lib/colors.ts';
+import FormattedDate from './FormattedDate.astro';
+import TagList from './TagList.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, headingLevel: Heading = 'h2' } = Astro.props;
+const { title, date, description, cover, coverAlt, tags, draft } = post.data;
+const href = `/blog/${post.id}/`;
+---
+
+<article class:list={['post-card', 'sticker', `tint-${colorFor(post.id)}`]}>
+  {
+    cover && (
+      <Image
+        class="post-card__cover"
+        src={cover}
+        alt={coverAlt ?? ''}
+        width={900}
+        widths={[400, 640, 900]}
+        sizes="(min-width: 64rem) 34rem, (min-width: 40rem) 45vw, 100vw"
+      />
+    )
+  }
+  <div class="post-card__body">
+    <p class="post-card__date">
+      <FormattedDate date={date} />
+      {draft && <span class="draft-badge">Draft</span>}
+    </p>
+    <Heading class="post-card__title"><a href={href}>{title}</a></Heading>
+    {description && <p class="post-card__description">{description}</p>}
+    <TagList tags={tags} class="post-card__tags" />
+  </div>
+</article>
+
+<style>
+  .post-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition:
+      transform 0.25s var(--ease-bounce),
+      box-shadow 0.25s var(--ease-bounce);
+  }
+
+  .post-card:hover {
+    transform: rotate(-0.8deg) translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .post-card__cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: var(--border);
+  }
+
+  .post-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.35rem 1.35rem;
+    border-top: 0.6rem solid var(--tint);
+  }
+
+  .post-card__cover + .post-card__body {
+    border-top: 0;
+  }
+
+  .post-card__date {
+    margin: 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .post-card__title {
+    font-size: 1.45rem;
+  }
+
+  .post-card__title a {
+    text-decoration: none;
+  }
+
+  /* the whole card is clickable */
+  .post-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .post-card__title a:focus-visible {
+    outline: none;
+  }
+
+  .post-card:has(.post-card__title a:focus-visible) {
+    outline: 3px solid var(--color-blue-strong);
+    outline-offset: 4px;
+  }
+
+  .post-card__description {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  /* TagList renders the <ul>, so reach it with :global (scoped styles stop at child components) */
+  .post-card :global(.post-card__tags) {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.4rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-card:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import { getResources } from '../../lib/content.ts';
+
+const resources = await getResources();
+---
+
+<BaseLayout title="Resources" description="Games, links and worksheets for my students." section="resources">
+  <PageHeader title="Resources" emoji="🎒" intro="Games, links and worksheets for my students. Pick your class!" />
+  {
+    resources.length > 0 ? (
+      <ul class="resource-grid">
+        {resources.map((resource) => (
+          <li>
+            <ResourceCard resource={resource} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p>Nothing here yet. Check back soon!</p>
+    )
+  }
+</BaseLayout>

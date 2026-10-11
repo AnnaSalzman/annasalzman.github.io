@@ -1,0 +1,61 @@
+.game-link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem;
+}
+
+.game-link,
+.prose a.game-link {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1.1rem;
+  color: var(--ink);
+  background: var(--tint-soft);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1.35;
+  transition:
+    transform 0.25s var(--ease-bounce),
+    box-shadow 0.25s var(--ease-bounce);
+}
+
+.game-link__emoji {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-size: 1.8rem;
+  line-height: 1;
+  background: var(--tint);
+  border: 2px solid var(--line);
+  border-radius: 50%;
+}
+
+.game-link__label {
+  flex: 1;
+}
+
+.game-link__arrow {
+  font-size: 1.4rem;
+  transition: translate 0.2s var(--ease-bounce);
+}
+
+a.game-link:hover {
+  background: var(--tint-soft);
+  transform: translateY(-3px) rotate(-1deg);
+  box-shadow: var(--shadow-lg);
+}
+
+a.game-link:hover .game-link__arrow {
+  translate: 5px 0;
+}
+
+a.game-link:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--shadow-color);
+}

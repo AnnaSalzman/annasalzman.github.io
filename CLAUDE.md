@@ -1,0 +1,119 @@
+# CLAUDE.md
+
+Personal site for **Anna Salzman**, a middle school teacher: a blog, her drawings, her photos, and resources for her students (pages with game links, worksheets, flashcards, quizzes). Playful, not a portfolio. Deployed to <https://annasalzman.github.io> by GitHub Actions.
+
+Two kinds of people work on this repo:
+
+- **Anna** edits Markdown in `src/content/` and uploads pictures, mostly in github.com's web editor. She is not a developer. Her guide is `docs/EDITING.md`.
+- **The developer** (and you) own everything else. How it fits together: `docs/ARCHITECTURE.md`. Why things are the way they are: `docs/DECISIONS.md`.
+
+Anything that changes what Anna types, sees, or might trip over must be reflected in `docs/EDITING.md` in the same change, in plain words.
+
+## Ground rules
+
+- **Never commit or push unless asked.** A push to `main` deploys the live site.
+- **Don't add dependencies without a reason.** Prefer the platform (CSS, custom elements, Astro built-ins) and a few lines of our own code. If you do add one, say why in `docs/DECISIONS.md`. Current runtime deps: `astro`, `@astrojs/markdown-satteri` (keep its version equal to the one `astro` depends on: `npm ls @astrojs/markdown-satteri` should show one deduped copy), `@astrojs/rss`, two `@fontsource-variable/*` fonts.
+- **No third-party scripts, trackers, analytics, or remote fonts.** Students visit this site.
+- **Never break Anna's build for style reasons.** Only things that genuinely can't render may fail the build; everything else is a warning (see "Content checks" below).
+- Use they/them for anyone whose pronouns you don't know, including in docs.
+
+## Commands
+
+```bash
+npm install            # Node ≥ 22.12 (see .nvmrc)
+npm run dev            # http://localhost:4321, drafts visible
+npm run build          # content checks + static build into dist/
+npm run preview        # serve dist/ (production behaviour: drafts hidden)
+npm run check          # content checks + astro check (types in .astro/.ts)
+npm run check:content  # only the content checks
+```
+
+In the Claude Code desktop app, `.claude/launch.json` defines `astro-dev` (4321) and `astro-preview` (4322) for the browser pane.
+
+## Stack
+
+Astro 7, static output. Markdown is rendered by **Sätteri** (Astro 7's default processor), configured in `astro.config.mjs` with `rawHtml: true` and our hast plugin `src/markdown-components/index.ts`. Plain CSS with custom properties. Browser JS is one small bundle (`src/scripts/main.ts`): the theme toggle plus custom elements. No UI framework, no MDX (on purpose: see DECISIONS).
+
+## Layout
+
+```
+src/content.config.ts      content schema (collections)
+src/content/<collection>/  Anna's .md files; pictures in <collection>/images/
+src/site.ts                site name, description, NAV (menu items + section colors)
+src/lib/                   content.ts (getters, drafts, tags, dates), colors.ts (crayon names)
+src/layouts/BaseLayout.astro
+src/components/            Astro components used by pages
+src/pages/                 routes
+src/markdown-components/   components Anna uses inside Markdown (build.ts / client.ts / style.css each)
+src/scripts/               browser code (main.ts entry, theme.ts, confetti.ts)
+src/styles/                tokens.css, base.css, prose.css
+scripts/check-content.mjs  plain-words content checks, run before every build
+public/files/              downloads with stable URLs (/files/name.pdf)
+docs/                      EDITING (Anna), ARCHITECTURE, DECISIONS
+```
+
+## Content schema
+
+Defined in `src/content.config.ts`. File name = URL id. Every collection has `draft` (hidden in production, shown with a badge in dev). Fields are deliberately forgiving (`draft: yes`, `tags: a, b`, numbers as titles, unknown colors ignored). Keep it that way: new fields should be optional with sensible fallbacks.
+
+| Collection | Folder | Fields (required in **bold**) | Routes |
+| --- | --- | --- | --- |
+| `blog` | `src/content/blog/` | **title**, **date**, description, cover (image), coverAlt, tags, draft | `/blog/`, `/blog/<id>/`, `/blog/tags/<tag>/`, `/rss.xml` |
+| `drawings` | `src/content/drawings/` | **title**, **date**, **image**, alt (falls back to title), draft; body = optional caption text | `/drawings/`, `/drawings/<id>/` |
+| `photos` | `src/content/photos/` | same as drawings | `/photos/`, `/photos/<id>/` |
+| `resources` | `src/content/resources/` | **title**, description, emoji (default 📚), color, order (default 100), draft | `/resources/`, `/resources/<id>/` |
+| `pages` | `src/content/pages/` | **title**, description, summary (about.md's is the home intro), hidden (noindex), draft | `/<id>/` |
+
+Read content only through `src/lib/content.ts` (it applies draft filtering and sorting). Format dates with `formatDate` (UTC), never `toLocaleDateString()` directly.
+
+Pictures are always referenced relatively (`./images/name.jpg`) so Astro optimizes them. Don't move Anna's pictures to `public/`.
+
+## Design rules
+
+The look is "sketchbook": warm dot-grid paper, chunky ink outlines, offset sticker shadows, marker highlights, tape and polaroids, slight rotations, bouncy hover. In dark mode it becomes a chalkboard.
+
+- **Use tokens, not literals.** Colors, fonts, radii and shadows come from `src/styles/tokens.css`. No new hex values in components.
+- **Colors by name.** Six crayons: red, orange, yellow, green, blue, purple (`src/lib/colors.ts`). Apply with a `tint-<color>` class and use `var(--tint)`, `var(--tint-soft)`, `var(--tint-strong)`, `var(--on-tint)` for text on a bright tint. Each section has a color in `NAV`.
+- **Both themes, always.** Check paper and chalkboard (toggle in the header). If you add a token, add it to the light block **and both** chalkboard blocks.
+- **Two fonts only:** `--font-display` (Shantell Sans, headings, labels, handwritten bits) and `--font-body` (Lexend, everything else). Don't add fonts or extra axes (size matters).
+- **Phones first.** Check at 375px wide: 16px side gutter (`.container`), no horizontal scroll, tap targets at least 24×24px (WCAG 2.2 AA), and much bigger for the things students tap (quiz answers, game links, flip cards).
+- **Accessible.** Real buttons and links, visible focus (`:focus-visible` outline), alt text on pictures, `aria-hidden` on decoration, colour contrast at least AA (ink on the bright tints is fine; white chalk text on bright tints is not, which is why `.marker` is translucent in dark mode).
+- **Motion is decoration.** Everything must work and look fine with `prefers-reduced-motion: reduce`.
+- **Playful but readable.** Rotations stay within ±2deg on anything with text; body text stays straight, 17–18px, line-height ~1.65, max ~42rem wide.
+- **Scoped styles stop at child components.** Style elements rendered by a child component with `.parent :global(.child-class)` or wrap them in your own element.
+
+## Adding a component for Anna
+
+A Markdown component is a tag Anna types in a `.md` file, e.g. `<word-search words="…">`. Read `src/markdown-components/flip-card/` first; it shows every part.
+
+1. **Name it** in kebab-case with a hyphen (custom-element rules), descriptive for Anna: `sticky-note`, not `callout`.
+2. **Design the syntax for hand-typing.** Prefer attributes for short text and Markdown between the tags for anything rich (a list, a paragraph). Things that look like normal Markdown (task lists in `quiz-question`, image lines in `photo-grid`) beat invented formats. It must degrade to readable text if misspelled.
+3. **Create `src/markdown-components/<name>/build.ts`** exporting a `MarkdownComponent` (`lib/types.ts`): `name`, `block` (true if it stands on its own line), optional `group` (wrapper class when several sit together), and `build(el, ctx)` returning hast. Use the helpers in `lib/hast.ts`. Validate input and `ctx.warn()` in plain words (it becomes a GitHub annotation); never throw.
+4. **Register it** in the `components` array in `src/markdown-components/index.ts`. (That's the only registration; `client.ts` and `style.css` are picked up by glob.)
+5. **If it needs behaviour, add `client.ts`** that defines a custom element with the **same tag name** (keep the tag in the build output). Guard with `if (!customElements.get(name))`, make `connectedCallback` idempotent, and make the server-rendered markup sensible without the script.
+6. **Add `style.css`** using tokens and `tint-*`. It's global, so prefix every selector with the component name. Style the `:not(:defined)` state if the element has a client part.
+7. **Add an example** to `src/content/pages/components.md` (the playground at `/components/`).
+8. **Document it** in `docs/EDITING.md` under "The fun stuff: components": what it's for, one copy-paste example, the rules. No developer words.
+9. **Verify:** `npm run check`, `npm run build` (watch for `[components]` warnings), then look at `/components/` in both themes and at 375px wide, and try it with the keyboard.
+
+Constraints of the Sätteri plugin API to keep in mind: hast property values must be strings, numbers, booleans or string arrays (number arrays get lost). User plugins run before Astro's image and heading-id plugins.
+
+## Content checks
+
+`scripts/check-content.mjs` (no dependencies) runs before every build. It may only **fail** for problems that would break the Astro build anyway (missing or wrongly cased picture, HEIC, unclosed frontmatter, unquoted colon in a value) and must explain them in Anna's words. Everything else is a **warning**. In CI, messages are `::error`/`::warning` annotations, shown at the top of the run page that the failure email links to. If you add a check, follow the same rule and test it by creating a deliberately broken file (and deleting it afterwards).
+
+## Before you call something done
+
+1. `npm run check` passes (0 errors).
+2. `npm run build` passes with no new warnings.
+3. Look at the changed pages in the dev server: paper and chalkboard, desktop and 375px.
+4. Docs updated: EDITING.md for anything Anna-facing, ARCHITECTURE.md for structure, DECISIONS.md for choices you made without asking.
+5. Leave the changes uncommitted unless asked.
+
+## Gotchas
+
+- `astro.config.mjs` imports TypeScript from `src/markdown-components/`; keep that code free of Astro virtual modules (`astro:*`) since it runs at config time.
+- Markdown images get their sizes from `sizeImage()` (`src/markdown-components/lib/images.ts`) plus `image.breakpoints` in the config.
+- macOS file names are case-insensitive, the CI runner's aren't. The content check catches this for pictures; mind it in imports too.
+- The chalkboard palette exists twice in `tokens.css` (media query and `[data-theme='dark']`).
+- Sample content (`sample-*`, `welcome.md`, and their pictures) is placeholder material for Anna to replace.

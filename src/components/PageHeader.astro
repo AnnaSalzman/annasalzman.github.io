@@ -1,0 +1,48 @@
+---
+/** The big title at the top of a page, with a highlighter swipe and an optional intro. */
+interface Props {
+  title: string;
+  intro?: string;
+  emoji?: string;
+}
+
+const { title, intro, emoji } = Astro.props;
+---
+
+<header class="page-header">
+  {emoji && <span class="page-header__emoji" aria-hidden="true">{emoji}</span>}
+  <h1><span class="marker">{title}</span></h1>
+  {intro && <p class="page-header__intro">{intro}</p>}
+  <slot />
+</header>
+
+<style>
+  .page-header {
+    margin-block: 2.5rem 2.25rem;
+  }
+
+  .page-header__emoji {
+    display: inline-grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 0.75rem;
+    font-size: 2.2rem;
+    background: var(--tint-soft);
+    border: var(--border);
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    rotate: -6deg;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 7vw, 3.75rem);
+  }
+
+  .page-header__intro {
+    max-width: 38rem;
+    margin: 0.9rem 0 0;
+    font-size: 1.15em;
+    color: var(--ink-soft);
+  }
+</style>

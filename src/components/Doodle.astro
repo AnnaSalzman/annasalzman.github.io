@@ -1,0 +1,98 @@
+---
+/**
+ * Hand-drawn style doodles used as decoration. Stroke follows `currentColor`;
+ * `filled` paints closed shapes with the current tint. Each path has
+ * pathLength="1" so CSS can animate it drawing itself (see .doodle--draw).
+ */
+const SHAPES = {
+  star: {
+    viewBox: '0 0 100 100',
+    d: 'M50 9 C53 20 56 30 61 37 C71 38 82 37 92 39 C84 45 75 51 67 57 C70 67 73 78 76 88 C67 82 58 76 50 70 C42 76 33 82 24 88 C27 78 30 67 33 57 C25 51 16 45 8 39 C18 37 29 38 39 37 C44 30 47 20 50 9 Z',
+  },
+  sparkle: {
+    viewBox: '0 0 100 100',
+    d: 'M50 8 C52 37 63 48 92 50 C63 52 52 63 50 92 C48 63 37 52 8 50 C37 48 48 37 50 8 Z',
+  },
+  squiggle: {
+    viewBox: '0 0 200 32',
+    d: 'M6 22 C24 2 40 2 52 16 S82 31 100 16 S132 1 148 16 S180 30 194 12',
+  },
+  sun: {
+    viewBox: '0 0 100 100',
+    d: 'M50 32 C61 32 68 40 68 50 C68 61 60 68 50 68 C39 68 32 60 32 50 C32 40 40 32 50 32 Z M50 8 L50 20 M50 80 L50 92 M8 50 L20 50 M80 50 L92 50 M20 20 L28 28 M72 72 L80 80 M80 20 L72 28 M28 72 L20 80',
+  },
+  plane: {
+    viewBox: '0 0 100 100',
+    d: 'M8 48 L92 14 L68 86 L49 60 Z M49 60 L92 14 M49 60 L46 78 L58 70',
+  },
+  heart: {
+    viewBox: '0 0 100 100',
+    d: 'M50 86 C22 66 8 49 13 32 C18 16 40 13 50 31 C60 13 82 16 87 32 C92 49 78 66 50 86 Z',
+  },
+  pencil: {
+    viewBox: '0 0 100 100',
+    d: 'M18 82 L24 62 L67 19 C71 15 77 15 81 19 C85 23 85 29 81 33 L38 76 Z M24 62 L38 76 M60 26 L74 40',
+  },
+  swirl: {
+    viewBox: '0 0 100 100',
+    d: 'M52 52 C56 49 55 43 50 42 C43 41 39 48 41 54 C44 63 56 65 63 58 C71 50 68 36 58 31 C46 25 31 31 27 44 C22 60 33 76 50 78 C68 80 84 67 86 50',
+  },
+  apple: {
+    viewBox: '0 0 100 100',
+    d: 'M50 33 C38 22 14 27 16 52 C18 76 36 92 50 83 C64 92 82 76 84 52 C86 27 62 22 50 33 Z M50 33 C50 25 52 17 57 11 M53 24 C58 15 69 14 73 18 C68 25 60 26 53 24 Z',
+  },
+} as const;
+
+export type DoodleName = keyof typeof SHAPES;
+
+interface Props {
+  name: DoodleName;
+  class?: string;
+  filled?: boolean;
+  /** Animate the line drawing itself in. */
+  draw?: boolean;
+  strokeWidth?: number;
+}
+
+const { name, class: className, filled = false, draw = false, strokeWidth = 5 } = Astro.props;
+const shape = SHAPES[name];
+---
+
+<svg
+  class:list={['doodle', { 'doodle--draw': draw }, className]}
+  viewBox={shape.viewBox}
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d={shape.d} fill={filled ? 'var(--tint)' : 'none'} pathLength="1"></path>
+</svg>
+
+<style>
+  .doodle {
+    overflow: visible;
+  }
+
+  .doodle--draw path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: doodle-draw 1.4s 0.2s ease-out forwards;
+  }
+
+  @keyframes doodle-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .doodle--draw path {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getPhotos } from '../../lib/content.ts';
+
+const photos = await getPhotos();
+---
+
+<BaseLayout title="Photos" description="Little moments worth keeping." section="photos">
+  <PageHeader title="Photos" emoji="📷" intro="Little moments worth keeping." />
+  {
+    photos.length > 0 ? (
+      <Gallery items={photos} base="/photos/" look="polaroid" />
+    ) : (
+      <p>No photos yet. Say cheese!</p>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryDetail from '../../components/GalleryDetail.astro';
+import { getPhotos, neighbours } from '../../lib/content.ts';
+
+export const getStaticPaths = (async () => {
+  const photos = await getPhotos();
+  return photos.map((item) => ({
+    params: { id: item.id },
+    props: { item, ...neighbours(photos, item.id) },
+  }));
+}) satisfies GetStaticPaths;
+
+const { item, newer, older } = Astro.props;
+---
+
+<BaseLayout title={item.data.title} description={`A photo: ${item.data.title}`} image={item.data.image} section="photos">
+  <GalleryDetail item={item} newer={newer} older={older} base="/photos/" allLabel="All photos" look="polaroid" />
+</BaseLayout>

@@ -1,0 +1,37 @@
+.sticky-note {
+  position: relative;
+  padding: 1.4rem 1.4rem 1.15rem;
+  background: var(--tint-soft);
+  border: var(--border);
+  border-radius: 6px 6px 6px 26px;
+  box-shadow: var(--shadow);
+  font-family: var(--font-display);
+  font-size: 1.05em;
+  rotate: -0.6deg;
+}
+
+/* a strip of tape holding the note up */
+.sticky-note::before {
+  content: '';
+  position: absolute;
+  top: -0.8rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 1.5rem;
+  translate: -50% 0;
+  rotate: 3deg;
+  background: color-mix(in srgb, var(--tint) 70%, transparent);
+  border-inline: 2px dashed color-mix(in srgb, var(--line) 25%, transparent);
+}
+
+.sticky-note > :first-child {
+  margin-top: 0;
+}
+
+.sticky-note > :last-child {
+  margin-bottom: 0;
+}
+
+.sticky-note > * + * {
+  margin-top: 0.75em;
+}

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getDrawings } from '../../lib/content.ts';
+
+const drawings = await getDrawings();
+---
+
+<BaseLayout title="Drawings" description="Pages from my sketchbook." section="drawings">
+  <PageHeader title="Drawings" emoji="🎨" intro="Pages from my sketchbook." />
+  {
+    drawings.length > 0 ? (
+      <Gallery items={drawings} base="/drawings/" look="taped" />
+    ) : (
+      <p>No drawings yet. My pencils are sharpened, though!</p>
+    )
+  }
+</BaseLayout>

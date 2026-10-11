@@ -1,0 +1,86 @@
+---
+/**
+ * Every page goes through this layout: <head> (title, description, social
+ * preview, feed), header, footer, global styles and the one client script.
+ */
+import '@fontsource-variable/lexend/wght.css';
+import '@fontsource-variable/shantell-sans/wght.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/prose.css';
+
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE, sectionColor, type Section } from '../site.ts';
+
+// Each Markdown component's styles: src/markdown-components/<name>/style.css
+import.meta.glob('../markdown-components/*/style.css', { eager: true });
+
+interface Props {
+  /** Page title; the site name is added after it. Leave out on the home page. */
+  title?: string;
+  description?: string;
+  /** Picture used when the page is shared (link previews). */
+  image?: ImageMetadata;
+  /** Which menu item to highlight, and which crayon tints the page. */
+  section?: Section;
+  /** Keep this page out of search engines. */
+  noindex?: boolean;
+  type?: 'website' | 'article';
+}
+
+const { title, description = SITE.description, image, section, noindex = false, type = 'website' } = Astro.props;
+
+const pageTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = image
+  ? new URL((await getImage({ src: image, width: 1200, format: 'jpeg' })).src, Astro.site)
+  : undefined;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: blog`} href="/rss.xml" />
+    <meta name="theme-color" content="#fdf8ef" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#22302b" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Apply a saved paper/chalkboard choice before anything is drawn (see src/scripts/theme.ts). -->
+    <script is:inline>
+      try {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
+  </head>
+  <body class={`tint-${sectionColor(section)}`}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header section={section} />
+    <main id="main" class="container">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/main.ts';
+    </script>
+  </body>
+</html>

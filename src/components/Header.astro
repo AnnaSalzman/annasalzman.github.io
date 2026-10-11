@@ -1,0 +1,187 @@
+---
+import { NAV, SITE, type Section } from '../site.ts';
+import Doodle from './Doodle.astro';
+
+interface Props {
+  section?: Section;
+}
+
+const { section } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="logo" href="/">
+      <span class="logo__mark tint-yellow"><Doodle name="star" filled strokeWidth={6} /></span>
+      <span class="logo__name">{SITE.name}</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['nav__link', `tint-${item.color}`]}
+                aria-current={path === item.href ? 'page' : item.section === section ? 'true' : undefined}
+              >
+                <span aria-hidden="true">{item.emoji}</span>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" title="Paper or chalkboard?">
+      <span class="visually-hidden">Chalkboard mode</span>
+      <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path>
+      </svg>
+      <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.5"></circle>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: 1.25rem 0.5rem;
+  }
+
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'logo toggle'
+      'nav nav';
+    align-items: center;
+    gap: 0.9rem 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .site-header__inner {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: 'logo nav toggle';
+    }
+  }
+
+  .logo {
+    grid-area: logo;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    justify-self: start;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.35rem, 4vw, 1.6rem);
+    line-height: 1;
+  }
+
+  .logo__mark {
+    width: 2.4rem;
+    height: 2.4rem;
+    transition: rotate 0.5s var(--ease-bounce);
+  }
+
+  .logo:hover .logo__mark {
+    rotate: 72deg;
+  }
+
+  .nav {
+    grid-area: nav;
+  }
+
+  @media (min-width: 60rem) {
+    .nav {
+      justify-self: end;
+    }
+  }
+
+  .nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.85rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    background: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    transition:
+      transform 0.25s var(--ease-bounce),
+      background-color 0.15s,
+      box-shadow 0.25s var(--ease-bounce);
+  }
+
+  .nav__link:hover {
+    background: var(--tint-soft);
+    transform: rotate(-3deg) translateY(-2px);
+  }
+
+  .nav__link[aria-current] {
+    background: var(--tint);
+    color: var(--on-tint);
+    box-shadow: 3px 3px 0 var(--shadow-color);
+  }
+
+  .theme-toggle {
+    grid-area: toggle;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    padding: 0;
+    background: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.4s var(--ease-bounce);
+  }
+
+  .theme-toggle:hover {
+    transform: rotate(-20deg) scale(1.08);
+  }
+
+  .theme-toggle svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .theme-toggle__sun,
+  .theme-toggle[aria-pressed='true'] .theme-toggle__moon {
+    display: none;
+  }
+
+  .theme-toggle[aria-pressed='true'] .theme-toggle__sun {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav__link:hover,
+    .theme-toggle:hover {
+      transform: none;
+    }
+  }
+</style>

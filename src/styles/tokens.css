@@ -1,0 +1,175 @@
+/*
+ * Design tokens. Everything visual reads from these variables.
+ * Two themes: "paper" (light, default) and "chalkboard" (dark).
+ * The chalkboard applies when the visitor's system prefers dark, unless they
+ * picked paper with the toggle ([data-theme="light"]), or when they picked it
+ * explicitly ([data-theme="dark"]).
+ */
+
+:root {
+  --font-display: 'Shantell Sans Variable', ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif;
+  --font-body: 'Lexend Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --page-width: 72rem;
+  --text-width: 42rem;
+  --gutter: 1rem;
+
+  --radius: 14px;
+  --radius-lg: 22px;
+  --border-width: 2.5px;
+  --border: var(--border-width) solid var(--line);
+  --shadow: 4px 4px 0 var(--shadow-color);
+  --shadow-lg: 7px 7px 0 var(--shadow-color);
+
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: light;
+
+  /* paper */
+  --paper: #fdf8ef;
+  --paper-deep: #f5ecdb;
+  --surface: #fffdf8;
+  --ink: #29233b;
+  --ink-soft: #5c5670;
+  --line: #29233b;
+  --shadow-color: #29233b;
+  --dot: rgb(41 35 59 / 0.13);
+  --on-tint: #29233b;
+  --marker-strength: 100%;
+
+  --color-red: #ff6f59;
+  --color-orange: #ff9f43;
+  --color-yellow: #ffd23f;
+  --color-green: #3ccf91;
+  --color-blue: #4dabf7;
+  --color-purple: #9775fa;
+
+  --color-red-soft: #ffe1dc;
+  --color-orange-soft: #ffe8d1;
+  --color-yellow-soft: #fff3c4;
+  --color-green-soft: #d4f5e6;
+  --color-blue-soft: #d9ecfd;
+  --color-purple-soft: #e9e2ff;
+
+  /* readable as text on --paper (WCAG AA) */
+  --color-red-strong: #c2321d;
+  --color-orange-strong: #a65300;
+  --color-yellow-strong: #7d6000;
+  --color-green-strong: #137a50;
+  --color-blue-strong: #1765a8;
+  --color-purple-strong: #6741d9;
+}
+
+/*
+ * The chalkboard palette. It appears twice (system preference, and the toggle)
+ * because a media query and an attribute selector can't share one rule.
+ * Keep both copies identical.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #22302b;
+    --paper-deep: #1b2723;
+    --surface: #2b3b35;
+    --ink: #f4f1e8;
+    --ink-soft: #c9cdc2;
+    --line: #e9e6dc;
+    --shadow-color: rgb(0 0 0 / 0.45);
+    --dot: rgb(255 255 255 / 0.05);
+    --on-tint: #1b2723;
+    --marker-strength: 40%;
+
+    --color-red: #ff9b8a;
+    --color-orange: #ffc078;
+    --color-yellow: #ffe58a;
+    --color-green: #8ce99a;
+    --color-blue: #91cdff;
+    --color-purple: #c5b3ff;
+
+    --color-red-soft: #4a3532;
+    --color-orange-soft: #4a3d2c;
+    --color-yellow-soft: #47432c;
+    --color-green-soft: #2f4a3b;
+    --color-blue-soft: #2d4152;
+    --color-purple-soft: #3b3a55;
+
+    --color-red-strong: #ffb1a4;
+    --color-orange-strong: #ffcf99;
+    --color-yellow-strong: #ffe9a3;
+    --color-green-strong: #a6eeb1;
+    --color-blue-strong: #ade0ff;
+    --color-purple-strong: #d5c8ff;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #22302b;
+  --paper-deep: #1b2723;
+  --surface: #2b3b35;
+  --ink: #f4f1e8;
+  --ink-soft: #c9cdc2;
+  --line: #e9e6dc;
+  --shadow-color: rgb(0 0 0 / 0.45);
+  --dot: rgb(255 255 255 / 0.05);
+  --on-tint: #1b2723;
+  --marker-strength: 40%;
+
+  --color-red: #ff9b8a;
+  --color-orange: #ffc078;
+  --color-yellow: #ffe58a;
+  --color-green: #8ce99a;
+  --color-blue: #91cdff;
+  --color-purple: #c5b3ff;
+
+  --color-red-soft: #4a3532;
+  --color-orange-soft: #4a3d2c;
+  --color-yellow-soft: #47432c;
+  --color-green-soft: #2f4a3b;
+  --color-blue-soft: #2d4152;
+  --color-purple-soft: #3b3a55;
+
+  --color-red-strong: #ffb1a4;
+  --color-orange-strong: #ffcf99;
+  --color-yellow-strong: #ffe9a3;
+  --color-green-strong: #a6eeb1;
+  --color-blue-strong: #ade0ff;
+  --color-purple-strong: #d5c8ff;
+}
+
+/*
+ * Tints: put `tint-<color>` on an element and its children can use
+ * --tint (bright fill), --tint-soft (pale fill) and --tint-strong (text).
+ * Color names match src/lib/colors.ts.
+ */
+:root,
+.tint-yellow {
+  --tint: var(--color-yellow);
+  --tint-soft: var(--color-yellow-soft);
+  --tint-strong: var(--color-yellow-strong);
+}
+.tint-red {
+  --tint: var(--color-red);
+  --tint-soft: var(--color-red-soft);
+  --tint-strong: var(--color-red-strong);
+}
+.tint-orange {
+  --tint: var(--color-orange);
+  --tint-soft: var(--color-orange-soft);
+  --tint-strong: var(--color-orange-strong);
+}
+.tint-green {
+  --tint: var(--color-green);
+  --tint-soft: var(--color-green-soft);
+  --tint-strong: var(--color-green-strong);
+}
+.tint-blue {
+  --tint: var(--color-blue);
+  --tint-soft: var(--color-blue-soft);
+  --tint-strong: var(--color-blue-strong);
+}
+.tint-purple {
+  --tint: var(--color-purple);
+  --tint-soft: var(--color-purple-soft);
+  --tint-strong: var(--color-purple-strong);
+}

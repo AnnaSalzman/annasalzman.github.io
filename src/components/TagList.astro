@@ -1,0 +1,26 @@
+---
+import { colorFor } from '../lib/colors.ts';
+import { tagSlug } from '../lib/content.ts';
+
+interface Props {
+  tags: string[];
+  class?: string;
+}
+
+const { tags, class: className } = Astro.props;
+const items = tags.map((name) => ({ name, slug: tagSlug(name) })).filter((tag) => tag.slug);
+---
+
+{
+  items.length > 0 && (
+    <ul class:list={['tag-list', className]} aria-label="Tags">
+      {items.map((tag) => (
+        <li>
+          <a class:list={['tag', `tint-${colorFor(tag.slug)}`]} href={`/blog/tags/${tag.slug}/`}>
+            #{tag.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

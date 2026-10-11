@@ -1,0 +1,228 @@
+/*
+ * Styles for rendered Markdown (posts, resource pages, About, …).
+ * Wrap Markdown output in <div class="prose">. Component styles live next to
+ * each component in src/markdown-components/<name>/style.css.
+ */
+
+.prose {
+  max-width: var(--text-width);
+}
+
+.prose > * + * {
+  margin-top: 1.1em;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote,
+.prose figure,
+.prose pre,
+.prose table {
+  margin-bottom: 0;
+}
+
+.prose h2 {
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  margin-top: 2em;
+}
+
+.prose h2::after {
+  content: '';
+  display: block;
+  width: 3.5rem;
+  height: 0.35rem;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: var(--tint);
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+  margin-top: 1.75em;
+}
+
+.prose h4 {
+  font-size: 1.1rem;
+  margin-top: 1.5em;
+}
+
+.prose a {
+  text-decoration-line: underline;
+  text-decoration-color: var(--tint);
+  text-decoration-thickness: 0.18em;
+  text-underline-offset: 0.2em;
+  transition: background-color 0.15s;
+}
+
+.prose a:hover {
+  text-decoration-style: wavy;
+  background: var(--tint-soft);
+}
+
+/* Links to downloads get a little file icon. */
+.prose a[href$='.pdf' i]::before,
+.prose a[href$='.docx' i]::before,
+.prose a[href$='.pptx' i]::before,
+.prose a[href$='.xlsx' i]::before {
+  content: '📄 ';
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose li + li {
+  margin-top: 0.35em;
+}
+
+.prose li::marker {
+  color: var(--tint-strong);
+  font-weight: 700;
+}
+
+.prose ul.contains-task-list {
+  list-style: none;
+  padding-left: 0.2em;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 0.4rem solid var(--tint);
+  background: var(--tint-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--font-display);
+  font-size: 1.1em;
+}
+
+.prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.prose hr {
+  border: 0;
+  height: 14px;
+  margin-block: 2.5rem;
+  /* a hand-drawn squiggle */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14' viewBox='0 0 40 14'%3E%3Cpath d='M0 7 Q10 0 20 7 T40 7' fill='none' stroke='%23999' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / 40px 14px repeat-x;
+  opacity: 0.8;
+}
+
+.prose img {
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--surface);
+}
+
+.prose p:has(> img:only-child) {
+  margin-block: 1.75em;
+}
+
+.prose code {
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+  background: var(--paper-deep);
+}
+
+.prose pre {
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  border: var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--line);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--tint-soft);
+  font-family: var(--font-display);
+}
+
+/* Native "show the answer" boxes: <details><summary>…</summary> … </details> */
+.prose details {
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 0 1.25rem;
+}
+
+.prose summary {
+  cursor: pointer;
+  padding-block: 0.8rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  list-style: none;
+}
+
+.prose summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose summary::before {
+  content: '👉';
+  display: inline-block;
+  margin-right: 0.5rem;
+  transition: transform 0.2s var(--ease-bounce);
+}
+
+.prose details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.prose details[open] {
+  padding-bottom: 1rem;
+}
+
+.prose details > :not(summary):first-of-type {
+  margin-top: 0;
+}
+
+/* Pasted embeds (YouTube, Google Slides, Forms, …), made responsive at build time. */
+.prose .embed iframe {
+  width: 100%;
+  height: auto;
+  min-height: 12rem;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--paper-deep);
+}
+
+/* Footnotes */
+.prose .footnotes {
+  margin-top: 3rem;
+  font-size: 0.9em;
+  color: var(--ink-soft);
+}

@@ -1,0 +1,173 @@
+---
+/**
+ * A wall of pictures. Drawings are taped up; photos are polaroids.
+ * Pictures keep their own shape (no cropping) and line up at the top of each
+ * row, like things pinned to a board. Newest first, reading left to right.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import { COLORS } from '../lib/colors.ts';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  items: CollectionEntry<'drawings'>[] | CollectionEntry<'photos'>[];
+  /** Address the pictures link to, e.g. "/drawings/". */
+  base: string;
+  look: 'taped' | 'polaroid';
+  /** Smaller tiles, for previews on the home page. */
+  compact?: boolean;
+}
+
+const { items, base, look, compact = false } = Astro.props;
+---
+
+<ul class:list={['gallery', `gallery--${look}`, { 'gallery--compact': compact }]}>
+  {
+    items.map((item, index) => (
+      <li class:list={['gallery__item', `tint-${COLORS[(index * 2 + 1) % COLORS.length]}`]}>
+        <a class="gallery__link" href={`${base}${item.id}/`}>
+          <Image
+            src={item.data.image}
+            alt={item.data.alt ?? item.data.title}
+            width={compact ? 480 : 800}
+            widths={compact ? [300, 480] : [360, 540, 800]}
+            sizes={
+              compact
+                ? '(min-width: 64rem) 16rem, (min-width: 40rem) 30vw, 45vw'
+                : '(min-width: 64rem) 22rem, (min-width: 40rem) 45vw, 100vw'
+            }
+          />
+          <span class="gallery__caption">
+            <span class="gallery__title">{item.data.title}</span>
+            {!compact && (
+              <span class="gallery__date">
+                <FormattedDate date={item.data.date} style="short" />
+              </span>
+            )}
+            {item.data.draft && <span class="draft-badge">Draft</span>}
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+    align-items: start;
+    gap: 2.5rem 2rem;
+    margin: 0;
+    padding: 0.75rem 0 0;
+    list-style: none;
+  }
+
+  .gallery--compact {
+    grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+    gap: 2rem 1.5rem;
+  }
+
+  .gallery__link {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    background: var(--surface);
+    border: var(--border);
+    box-shadow: var(--shadow);
+    rotate: -1.2deg;
+    transition:
+      rotate 0.3s var(--ease-bounce),
+      transform 0.3s var(--ease-bounce),
+      box-shadow 0.3s var(--ease-bounce);
+  }
+
+  .gallery__item:nth-child(3n + 2) .gallery__link {
+    rotate: 1.4deg;
+  }
+
+  .gallery__item:nth-child(3n) .gallery__link {
+    rotate: -0.4deg;
+  }
+
+  .gallery__link:hover,
+  .gallery__link:focus-visible {
+    rotate: 0deg;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .gallery__link img {
+    width: 100%;
+  }
+
+  .gallery__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .gallery__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .gallery__date {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  /* drawings: taped to the wall */
+  .gallery--taped .gallery__link {
+    padding: 0.6rem;
+    border-radius: 4px;
+  }
+
+  .gallery--taped .gallery__link::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: -0.9rem;
+    left: 50%;
+    width: 5.5rem;
+    height: 1.6rem;
+    translate: -50% 0;
+    rotate: -4deg;
+    background: color-mix(in srgb, var(--tint) 72%, transparent);
+    border-inline: 2px dashed color-mix(in srgb, var(--line) 25%, transparent);
+  }
+
+  .gallery--taped .gallery__caption {
+    padding: 0.6rem 0.2rem 0.1rem;
+  }
+
+  /* photos: polaroids */
+  .gallery--polaroid .gallery__link {
+    padding: 0.7rem 0.7rem 0;
+    border-radius: 3px;
+  }
+
+  .gallery--polaroid .gallery__link img {
+    border: 2px solid var(--line);
+  }
+
+  .gallery--polaroid .gallery__caption {
+    min-height: 3.2rem;
+    padding: 0.6rem 0.2rem 0.8rem;
+    align-items: center;
+  }
+
+  .gallery--polaroid .gallery__title {
+    font-size: 1.05rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery__link:hover,
+    .gallery__link:focus-visible {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,259 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Doodle from '../components/Doodle.astro';
+import Gallery from '../components/Gallery.astro';
+import PostCard from '../components/PostCard.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import { getDrawings, getPhotos, getPosts, getResources } from '../lib/content.ts';
+import { SITE } from '../site.ts';
+
+const about = await getEntry('pages', 'about');
+const firstName = SITE.name.split(' ')[0];
+
+const posts = (await getPosts()).slice(0, 3);
+const drawings = (await getDrawings()).slice(0, 4);
+const photos = (await getPhotos()).slice(0, 4);
+const resources = (await getResources()).slice(0, 4);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="hero__text">
+      <p class="hero__hello tint-green">Hello there!</p>
+      <h1>Hi, I’m <span class="marker tint-yellow">{firstName}</span>.</h1>
+      {about?.data.summary && <p class="hero__summary">{about.data.summary}</p>}
+      <div class="hero__actions">
+        <a class="button tint-red" href="/blog/">Read the blog</a>
+        <a class="button tint-green" href="/resources/">For my students <span aria-hidden="true">🎒</span></a>
+      </div>
+    </div>
+
+    <div class="hero__art" aria-hidden="true">
+      <span class="hero__doodle hero__doodle--sun tint-yellow"><Doodle name="sun" filled draw /></span>
+      <span class="hero__doodle hero__doodle--apple tint-red"><Doodle name="apple" filled draw /></span>
+      <span class="hero__doodle hero__doodle--pencil tint-orange"><Doodle name="pencil" filled draw /></span>
+      <span class="hero__doodle hero__doodle--plane tint-blue"><Doodle name="plane" filled draw /></span>
+      <span class="hero__doodle hero__doodle--star tint-purple"><Doodle name="sparkle" filled draw /></span>
+      <span class="hero__doodle hero__doodle--heart tint-red"><Doodle name="heart" filled draw /></span>
+      <span class="hero__doodle hero__doodle--swirl tint-green"><Doodle name="swirl" draw /></span>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="home-section tint-red" aria-labelledby="home-blog">
+        <div class="home-section__head">
+          <h2 id="home-blog">
+            <span class="marker">Fresh from the blog</span>
+          </h2>
+          <a class="more-link" href="/blog/">All posts →</a>
+        </div>
+        <div class="post-grid">
+          {posts.map((post) => (
+            <PostCard post={post} headingLevel="h3" />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    drawings.length > 0 && (
+      <section class="home-section tint-purple" aria-labelledby="home-drawings">
+        <div class="home-section__head">
+          <h2 id="home-drawings">
+            <span class="marker">From my sketchbook</span>
+          </h2>
+          <a class="more-link" href="/drawings/">All drawings →</a>
+        </div>
+        <Gallery items={drawings} base="/drawings/" look="taped" compact />
+      </section>
+    )
+  }
+
+  {
+    photos.length > 0 && (
+      <section class="home-section tint-blue" aria-labelledby="home-photos">
+        <div class="home-section__head">
+          <h2 id="home-photos">
+            <span class="marker">Snapshots</span>
+          </h2>
+          <a class="more-link" href="/photos/">All photos →</a>
+        </div>
+        <Gallery items={photos} base="/photos/" look="polaroid" compact />
+      </section>
+    )
+  }
+
+  {
+    resources.length > 0 && (
+      <section class="home-section tint-green" aria-labelledby="home-resources">
+        <div class="home-section__head">
+          <h2 id="home-resources">
+            <span class="marker">For my students</span>
+          </h2>
+          <a class="more-link" href="/resources/">All resources →</a>
+        </div>
+        <ul class="resource-grid">
+          {resources.map((resource) => (
+            <li>
+              <ResourceCard resource={resource} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-block: 2.5rem 1.5rem;
+  }
+
+  @media (min-width: 52rem) {
+    .hero {
+      grid-template-columns: 1.3fr 1fr;
+      padding-block: 4rem 2rem;
+    }
+  }
+
+  .hero__hello {
+    display: inline-block;
+    margin: 0 0 1rem;
+    padding: 0.2rem 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--on-tint);
+    background: var(--tint);
+    border: var(--border);
+    border-radius: 999px;
+    box-shadow: 3px 3px 0 var(--shadow-color);
+    rotate: -3deg;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .hero__summary {
+    max-width: 34rem;
+    margin: 1.25rem 0 0;
+    font-size: 1.2em;
+    color: var(--ink-soft);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.75rem;
+  }
+
+  .hero__art {
+    position: relative;
+    width: min(100%, 26rem);
+    aspect-ratio: 1;
+    justify-self: center;
+  }
+
+  @media (max-width: 51.99rem) {
+    .hero {
+      padding-top: 1.5rem;
+    }
+
+    .hero__art {
+      width: min(100%, 15rem);
+    }
+  }
+
+  .hero__doodle {
+    position: absolute;
+    color: var(--ink);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .hero__doodle :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__doodle--sun {
+    top: 2%;
+    left: 30%;
+    width: 38%;
+    height: 38%;
+  }
+  .hero__doodle--apple {
+    top: 44%;
+    left: 6%;
+    width: 34%;
+    height: 34%;
+    animation-delay: -1s;
+  }
+  .hero__doodle--pencil {
+    top: 50%;
+    left: 52%;
+    width: 36%;
+    height: 36%;
+    animation-delay: -2.5s;
+  }
+  .hero__doodle--plane {
+    top: 14%;
+    left: 72%;
+    width: 26%;
+    height: 26%;
+    animation-delay: -4s;
+  }
+  .hero__doodle--star {
+    top: 6%;
+    left: 4%;
+    width: 18%;
+    height: 18%;
+    animation-delay: -3s;
+  }
+  .hero__doodle--heart {
+    top: 84%;
+    left: 40%;
+    width: 15%;
+    height: 15%;
+    animation-delay: -1.8s;
+  }
+  .hero__doodle--swirl {
+    top: 78%;
+    left: 80%;
+    width: 18%;
+    height: 18%;
+    color: var(--tint);
+    animation-delay: -5s;
+  }
+
+  @keyframes float {
+    50% {
+      translate: 0 -8px;
+      rotate: 4deg;
+    }
+  }
+
+  .home-section {
+    margin-top: 4.5rem;
+  }
+
+  .home-section__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .home-section__head h2 {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+  }
+</style>
